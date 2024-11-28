@@ -1,17 +1,18 @@
 package hr.java.restaurant.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Represents order which will be ordered from a customer.
  */
 public class Order extends Entity {
     private Restaurant restaurant;
-    private Meal[] meals;
+    private Set<Meal> meals;
     private Deliverer deliverer;
     private LocalDateTime deliveryDateAndTime;
 
-    public Order(Long id, Restaurant restaurant, Meal[] meals, Deliverer deliverer, LocalDateTime deliveryDateAndTime) {
+    public Order(Long id, Restaurant restaurant, Set<Meal> meals, Deliverer deliverer, LocalDateTime deliveryDateAndTime) {
         super(id);
         this.restaurant = restaurant;
         this.meals = meals;
@@ -27,11 +28,11 @@ public class Order extends Entity {
         this.restaurant = restaurant;
     }
 
-    public Meal[] getMeals() {
+    public Set<Meal> getMeals() {
         return meals;
     }
 
-    public void setMeals(Meal[] meals) {
+    public void setMeals(Set<Meal> meals) {
         this.meals = meals;
     }
 

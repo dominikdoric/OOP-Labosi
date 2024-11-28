@@ -50,4 +50,14 @@ public class Ingredient extends Entity {
     public void setPreparationMethod(String preparationMethod) {
         this.preparationMethod = preparationMethod;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

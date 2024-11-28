@@ -1,6 +1,7 @@
 package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * Represents meal with meat which will be available in the restaurant.
@@ -11,7 +12,7 @@ public final class MeatMeal extends Meal implements Meat {
     public MeatMeal(Long id,
                     String name,
                     Category category,
-                    Ingredient[] ingredients,
+                    Set<Ingredient> ingredients,
                     BigDecimal price,
                     String freezingMethod) {
         super(id, name, category, ingredients, price);

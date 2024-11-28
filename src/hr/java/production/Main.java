@@ -6,8 +6,7 @@ import hr.java.restaurant.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static final int NUMBER_OF_CATEGORIES = 3;
@@ -21,14 +20,14 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Category[] categories = new Category[NUMBER_OF_CATEGORIES];
-        Ingredient[] ingredients = new Ingredient[NUMBER_OF_INGREDIENTS];
-        Meal[] meals = new Meal[NUMBER_OF_MEALS];
-        Chef[] chefs = new Chef[NUMBER_OF_CHEFS];
-        Waiter[] waiters = new Waiter[NUMBER_OF_WAITERS];
-        Deliverer[] deliverers = new Deliverer[NUMBER_OF_DELIVERERS];
-        Restaurant[] restaurants = new Restaurant[NUMBER_OF_RESTAURANTS];
-        Order[] orders = new Order[NUMBER_OF_ORDERS];
+        Set<Category> categories = new HashSet<>(NUMBER_OF_CATEGORIES);
+        Set<Ingredient> ingredients = new HashSet<>(NUMBER_OF_INGREDIENTS);
+        Set<Meal> meals = new HashSet<>(NUMBER_OF_MEALS);
+        Set<Chef> chefs = new HashSet<>(NUMBER_OF_CHEFS);
+        Set<Waiter> waiters = new HashSet<>(NUMBER_OF_WAITERS);
+        Set<Deliverer> deliverers = new HashSet<>(NUMBER_OF_DELIVERERS);
+        Set<Restaurant> restaurants = new HashSet<>(NUMBER_OF_RESTAURANTS);
+        Set<Order> orders = new HashSet<>(NUMBER_OF_ORDERS);
 
         System.out.println("Molimo Vas unesite koji će sve kategorije biti u Vašim restoranima.");
         insertCategories(categories, scanner);
@@ -53,10 +52,9 @@ public class Main {
 
         System.out.println("Molimo vas unesite naruđbu");
         insertOrders(scanner, orders, restaurants, meals, deliverers);
-
     }
 
-    private static void insertCategories(Category[] categories, Scanner scanner) {
+    private static void insertCategories(Set<Category> categories, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " kategorije: ");
             String categoryName = scanner.nextLine();
@@ -64,18 +62,19 @@ public class Main {
             System.out.println("Molimo unesite opis " + (i + 1) + " kategorije: ");
             String categoryDescription = scanner.nextLine();
 
-            categories[i] = new Category((long) i, categoryName, categoryDescription);
+            categories.add(new Category((long) i, categoryName, categoryDescription));
         }
         System.out.println("Hvala na unošenju kategorija!");
         System.out.println("Vaše kategorije su:");
-        for (int i = 0; i < categories.length; i++) {
-            System.out.print("\n\t" + (i + 1) + ". " + categories[i].getName() + "\n");
+        List<Category> categoryList = new ArrayList<>(categories);
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.print("\n\t" + (i + 1) + ". " + categoryList.get(i).getName() + "\n");
         }
     }
 
     // TODO: Implementirati da kada korisnik ne unese točno ime kategorije da ga traži da ponovno unese
-    private static void insertIngredients(Ingredient[] ingredients,
-                                          Category[] categories,
+    private static void insertIngredients(Set<Ingredient> ingredients,
+                                          Set<Category> categories,
                                           Scanner scanner) {
 
         for (int i = 0; i < NUMBER_OF_INGREDIENTS; i++) {
@@ -104,8 +103,9 @@ public class Main {
 
             System.out.println("Molimo unesite u kojoj kategoriji jela se ovaj sastojak može koristiti: ");
             System.out.println("Ovo su sve kategorije: ");
-            for (int j = 0; j < categories.length; j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            List<Category> categoryList = new ArrayList<>(categories);
+            for (int j = 0; j < categories.size(); j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
             }
 
             String categoryName = scanner.nextLine();
@@ -113,18 +113,18 @@ public class Main {
             System.out.println("Ime odabrane kategorije: " + choosenCategory.getName());
             System.out.println("Opis odabrane kategorije: " + choosenCategory.getDescription());
 
-            ingredients[i] = new Ingredient(
+            ingredients.add(new Ingredient(
                     (long) i,
                     ingredientName,
                     new Category((long) i, choosenCategory.getName(), choosenCategory.getDescription()),
                     kcal,
-                    preparationMethod);
+                    preparationMethod));
         }
     }
 
-    private static void insertMeals(Meal[] meals,
-                                    Ingredient[] ingredients,
-                                    Category[] categories,
+    private static void insertMeals(Set<Meal> meals,
+                                    Set<Ingredient> ingredients,
+                                    Set<Category> categories,
                                     Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_MEALS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " jela: ");
@@ -146,8 +146,9 @@ public class Main {
 
             System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
             System.out.println("Ovo su sve kategorije: ");
-            for (int j = 0; j < categories.length; j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            List<Category> categoryList = new ArrayList<>(categories);
+            for (int j = 0; j < categories.size(); j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
             }
             scanner.nextLine();
             String categoryName = scanner.nextLine();
@@ -155,18 +156,19 @@ public class Main {
 
             System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
             System.out.println("Ovo su svi sastojci: ");
-            for (int j = 0; j < ingredients.length; j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            List<Ingredient> ingredientList = new ArrayList<>(ingredients);
+            for (int j = 0; j < ingredients.size(); j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(i).getName() + "\n");
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
-            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            Set<Ingredient> chosenIngredients = new HashSet<>(ingredientsNumber);
             for (int k = 0; k < ingredientsNumber; k++) {
                 System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
                 scanner.nextLine();
                 String ingredientName = scanner.nextLine();
                 Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
-                chosenIngredients[k] = choosenIngredient;
+                chosenIngredients.add(choosenIngredient);
             }
 
             /*
@@ -175,11 +177,11 @@ public class Main {
                 System.out.print("\n\t" + (h + 1) + ". " + chosenIngredients[h].getName() + "\n");
             }*/
 
-            meals[i] = new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice);
+            meals.add(new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice));
         }
     }
 
-    private static void insertChefs(Chef[] chefs, Scanner scanner) {
+    private static void insertChefs(Set<Chef> chefs, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CHEFS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". kuhara:");
             String chefFirstName = scanner.nextLine();
@@ -208,16 +210,17 @@ public class Main {
             Contract contract = new Contract(chefSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
             Bonus bonus = new Bonus(1500);
 
-            chefs[i] = new Chef(chefFirstName, chefLastName, contract, bonus);
+            chefs.add(new Chef(chefFirstName, chefLastName, contract, bonus));
         }
 
         System.out.println("Ovo su kuhari koji rade u Vašim restoranima: ");
-        for (int i = 0; i < chefs.length; i++) {
-            System.out.println("Ime " + (i + 1) + ". kuhara: " + chefs[i].getFirstName() + " " + chefs[i].getLastName());
+        List<Chef> chefList = new ArrayList<>(chefs);
+        for (int i = 0; i < chefs.size(); i++) {
+            System.out.println("Ime " + (i + 1) + ". kuhara: " + chefList.get(i).getFirstName() + " " + chefList.get(i).getLastName());
         }
     }
 
-    private static void insertWaiters(Waiter[] waiters, Scanner scanner) {
+    private static void insertWaiters(Set<Waiter> waiters, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_WAITERS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". konobara:");
             String waiterFirstName = scanner.nextLine();
@@ -245,16 +248,17 @@ public class Main {
             Contract contract = new Contract(waiterSalary, startDate, endDate, Contract.ContractType.PART_TIME);
             Bonus bonus = new Bonus(500);
 
-            waiters[i] = new Waiter(waiterFirstName, waiterLastName, contract, bonus);
+            waiters.add(new Waiter(waiterFirstName, waiterLastName, contract, bonus));
         }
 
         System.out.println("Ovo su konobari koji rade u Vašim restoranima: ");
-        for (int i = 0; i < waiters.length; i++) {
-            System.out.println("Ime " + (i + 1) + ". konobara: " + waiters[i].getFirstName() + " " + waiters[i].getLastName());
+        List<Waiter> waiterList = new ArrayList<>(waiters);
+        for (int i = 0; i < waiters.size(); i++) {
+            System.out.println("Ime " + (i + 1) + ". konobara: " + waiterList.get(i).getFirstName() + " " + waiterList.get(i).getLastName());
         }
     }
 
-    private static void insertDeliverers(Deliverer[] deliverers, Scanner scanner) {
+    private static void insertDeliverers(Set<Deliverer> deliverers, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_DELIVERERS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". dostavljača:");
             String delivererFirstName = scanner.nextLine();
@@ -282,21 +286,22 @@ public class Main {
             Contract contract = new Contract(delivererSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
             Bonus bonus = new Bonus(2500);
 
-            deliverers[i] = new Deliverer(delivererFirstName, delivererLastName, contract, bonus);
+            deliverers.add(new Deliverer(delivererFirstName, delivererLastName, contract, bonus));
         }
 
         System.out.println("Ovo su dostavljači koji rade u Vašim restoranima: ");
-        for (int i = 0; i < deliverers.length; i++) {
-            System.out.println("Ime " + (i + 1) + ". dostavljača: " + deliverers[i].getFirstName() + " " + deliverers[i].getLastName());
+        List<Deliverer> delivererList = new ArrayList<>(deliverers);
+        for (int i = 0; i < deliverers.size(); i++) {
+            System.out.println("Ime " + (i + 1) + ". dostavljača: " + delivererList.get(i).getFirstName() + " " + delivererList.get(i).getLastName());
         }
     }
 
     private static void insertRestaurants(Scanner scanner,
-                                          Restaurant[] restaurants,
-                                          Meal[] meals,
-                                          Chef[] chefs,
-                                          Waiter[] waiters,
-                                          Deliverer[] deliverers
+                                          Set<Restaurant> restaurants,
+                                          Set<Meal> meals,
+                                          Set<Chef> chefs,
+                                          Set<Waiter> waiters,
+                                          Set<Deliverer> deliverers
     ) {
         for (int i = 0; i < NUMBER_OF_RESTAURANTS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". restorana: ");
@@ -318,102 +323,109 @@ public class Main {
 
             System.out.println("Molimo Vas unesite koje će jelo biti u Vašem " + (i + 1) + ". restoranu:");
             System.out.println("Ovo su sva moguća jela:");
-            for (int j = 0; j < meals.length; j++) {
-                String mealName = meals[i].getName();
+            List<Meal> mealList = new ArrayList<>(meals);
+            for (int j = 0; j < meals.size(); j++) {
+                String mealName = mealList.get(i).getName();
                 System.out.println("1. " + mealName);
             }
 
             String mealName = scanner.nextLine();
             Meal choosenMeal = findMealByName(meals, mealName);
-            Meal[] chosenMeals = new Meal[1];
-            chosenMeals[0] = choosenMeal;
+            Set<Meal> chosenMeals = new HashSet<>(1);
+            chosenMeals.add(choosenMeal);
 
             System.out.println("Molimo Vas unesite koji kuhar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući kuhari: ");
-            for (int j = 0; j < chefs.length; j++) {
-                String chefName = chefs[i].getFirstName();
+            List<Chef> chefList = new ArrayList<>(chefs);
+            for (int j = 0; j < chefs.size(); j++) {
+                String chefName = chefList.get(i).getFirstName();
                 System.out.println("1. " + chefName);
             }
 
             String chefName = scanner.nextLine();
             Chef chosenChef = findChefByName(chefs, chefName);
-            Chef[] chosenChefs = new Chef[1];
-            chosenChefs[0] = chosenChef;
+            Set<Chef> chosenChefs = new HashSet<>(1);
+            chosenChefs.add(chosenChef);
 
             System.out.println("Molimo Vas unesite koji konobar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući konobari: ");
-            for (int j = 0; j < waiters.length; j++) {
-                String waiterName = waiters[i].getFirstName();
+            List<Waiter> waiterList = new ArrayList<>(waiters);
+            for (int j = 0; j < waiters.size(); j++) {
+                String waiterName = waiterList.get(i).getFirstName();
                 System.out.println("1. " + waiterName);
             }
 
             String waiterName = scanner.nextLine();
             Waiter chosenWaiter = findWaiterByName(waiters, waiterName);
-            Waiter[] chosenWaiters = new Waiter[1];
-            chosenWaiters[0] = chosenWaiter;
+            Set<Waiter> chosenWaiters = new HashSet<>(1);
+            chosenWaiters.add(chosenWaiter);
 
             System.out.println("Molimo Vas unesite koji dostavljač će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući dostavljači: ");
-            for (int j = 0; j < deliverers.length; j++) {
-                System.out.println("1. " + deliverers[i].getFirstName());
+            List<Deliverer> delivererList = new ArrayList<>(deliverers);
+            for (int j = 0; j < deliverers.size(); j++) {
+                System.out.println("1. " + delivererList.get(i).getFirstName());
             }
 
             String delivererName = scanner.nextLine();
             Deliverer chosenDeliverer = findDelivererByName(deliverers, delivererName);
-            Deliverer[] chosenDeliverers = new Deliverer[1];
-            chosenDeliverers[0] = chosenDeliverer;
+            Set<Deliverer> chosenDeliverers = new HashSet<>(1);
+            chosenDeliverers.add(chosenDeliverer);
 
-            restaurants[i] = new Restaurant(
+            restaurants.add(new Restaurant(
                     (long) i,
                     restaurantName,
                     address,
                     chosenMeals,
                     chosenChefs,
                     chosenWaiters,
-                    chosenDeliverers);
+                    chosenDeliverers));
         }
     }
 
     private static void insertOrders(Scanner scanner,
-                                     Order[] orders,
-                                     Restaurant[] restaurants,
-                                     Meal[] meals,
-                                     Deliverer[] deliverers) {
+                                     Set<Order> orders,
+                                     Set<Restaurant> restaurants,
+                                     Set<Meal> meals,
+                                     Set<Deliverer> deliverers) {
 
         System.out.println("Ovjde možete napraviti svoju naruđbu: ");
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             System.out.println("Iz kojeg restorana želite naručiti " + (i + 1) + ". naruđbu?");
-            for (int j = 0; j < restaurants.length; j++) {
-                System.out.println("1. " + restaurants[j].getName());
+            List<Restaurant> restaurantList = new ArrayList<>(restaurants);
+            for (int j = 0; j < restaurants.size(); j++) {
+                System.out.println("1. " + restaurantList.get(i).getName());
             }
             String restaurantName = scanner.nextLine();
             Restaurant chosenRestaurant = findRestaurantByName(restaurants, restaurantName);
 
             System.out.println("Koje jelo želite naručiti iz " + chosenRestaurant.getName() + " restorana?");
             System.out.println("Ovo su sva jela: ");
-            for (int k = 0; k < meals.length; k++) {
-                System.out.println("1. " + meals[k].getName());
+            List<Meal> mealList = new ArrayList<>(meals);
+            for (int k = 0; k < meals.size(); k++) {
+                System.out.println("1. " + mealList.get(i).getName());
             }
             String mealName = scanner.nextLine();
             Meal chosenMeal = findMealByName(meals, mealName);
-            Meal[] chosenMeals = new Meal[1];
-            chosenMeals[0] = chosenMeal;
+            Set<Meal> chosenMeals = new HashSet<>(1);
+            chosenMeals.add(chosenMeal);
 
             System.out.println("Koji dostavljač želite da Vam dostavi hranu?");
             System.out.println("Ovo su dostupni dostavljači: ");
-            for (int h = 0; h < deliverers.length; h++) {
-                System.out.println("1. " + deliverers[h].getFirstName());
+            List<Deliverer> delivererList = new ArrayList<>(deliverers);
+            for (int h = 0; h < deliverers.size(); h++) {
+                System.out.println("1. " + delivererList.get(i).getFirstName());
             }
             String delivererName = scanner.nextLine();
             Deliverer chosenDeliverer = findDelivererByName(deliverers, delivererName);
 
             LocalDateTime deliveryDateAndTime = LocalDateTime.now();
 
-            orders[i] = new Order((long) i, chosenRestaurant, chosenMeals, chosenDeliverer, deliveryDateAndTime);
+            orders.add(new Order((long) i, chosenRestaurant, chosenMeals, chosenDeliverer, deliveryDateAndTime));
         }
     }
 
-    private static Category findCategoryByName(Category[] categories, String name) {
+    private static Category findCategoryByName(Set<Category> categories, String name) {
         for (Category category : categories) {
             if (category.getName().equalsIgnoreCase(name)) {
                 return category;
@@ -422,7 +434,7 @@ public class Main {
         return null;
     }
 
-    private static Ingredient findIngredientByName(Ingredient[] ingredients, String name) {
+    private static Ingredient findIngredientByName(Set<Ingredient> ingredients, String name) {
         for (Ingredient ingredient : ingredients) {
             if (ingredient.getName().equalsIgnoreCase(name)) {
                 return ingredient;
@@ -434,11 +446,12 @@ public class Main {
     /**
      * Finds specific meal from meals list by iterating through meals list elements and
      * returns meal which mealLame corresponds to mealLame passed as a parameter.
-     * @param meals List of all available meals in restaurant.
+     *
+     * @param meals    List of all available meals in restaurant.
      * @param mealLame Name which we want to find in the list.
      * @return Meal which mealLame matches to mealLame in the parameter.
      */
-    private static Meal findMealByName(Meal[] meals, String mealLame) {
+    private static Meal findMealByName(Set<Meal> meals, String mealLame) {
         for (Meal meal : meals) {
             if (meal.getName().equalsIgnoreCase(mealLame)) {
                 return meal;
@@ -450,11 +463,12 @@ public class Main {
     /**
      * Finds specific chef from chefs list by iterating through chefs list elements and
      * returns chef which name corresponds to name passed as a parameter.
-     * @param chefs List of all available chefs in restaurant.
+     *
+     * @param chefs    List of all available chefs in restaurant.
      * @param chefName Name which we want to find in the list.
      * @return Chef which name matches to name in the parameter.
      */
-    private static Chef findChefByName(Chef[] chefs, String chefName) {
+    private static Chef findChefByName(Set<Chef> chefs, String chefName) {
         for (Chef chef : chefs) {
             if (chef.getFirstName().equalsIgnoreCase(chefName)) {
                 return chef;
@@ -466,11 +480,12 @@ public class Main {
     /**
      * Finds specific waiter from waiters list by iterating through waiter list elements and
      * returns waiter which name corresponds to name passed as a parameter.
-     * @param waiters List of all available waiters in restaurant.
+     *
+     * @param waiters    List of all available waiters in restaurant.
      * @param waiterName Name which we want to find in the list.
      * @return Waiter which name matches to name in the parameter.
      */
-    private static Waiter findWaiterByName(Waiter[] waiters, String waiterName) {
+    private static Waiter findWaiterByName(Set<Waiter> waiters, String waiterName) {
         for (Waiter waiter : waiters) {
             if (waiter.getFirstName().equalsIgnoreCase(waiterName)) {
                 return waiter;
@@ -482,11 +497,12 @@ public class Main {
     /**
      * Finds specific deliverer from deliverers list by iterating through deliverers list elements and
      * returns deliverer which name corresponds to name passed as a parameter.
-     * @param deliverers List of all available deliverers in restaurant.
+     *
+     * @param deliverers    List of all available deliverers in restaurant.
      * @param delivererName Name which we want to find in the list.
      * @return Deliverer which name matches to name in the parameter.
      */
-    private static Deliverer findDelivererByName(Deliverer[] deliverers, String delivererName) {
+    private static Deliverer findDelivererByName(Set<Deliverer> deliverers, String delivererName) {
         for (Deliverer deliverer : deliverers) {
             if (deliverer.getFirstName().equalsIgnoreCase(delivererName)) {
                 return deliverer;
@@ -498,11 +514,12 @@ public class Main {
     /**
      * Finds specific restaurant from restaurants list by iterating through restaurant list elements and
      * returns restaurant which name corresponds to name passed as a parameter.
-     * @param restaurants List of all available restaurants.
+     *
+     * @param restaurants    List of all available restaurants.
      * @param restaurantName Name which we want to find in the list.
      * @return Restaurant which name matches to name in the parameter.
      */
-    private static Restaurant findRestaurantByName(Restaurant[] restaurants, String restaurantName) {
+    private static Restaurant findRestaurantByName(Set<Restaurant> restaurants, String restaurantName) {
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getName().equalsIgnoreCase(restaurantName)) {
                 return restaurant;

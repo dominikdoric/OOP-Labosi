@@ -1,6 +1,7 @@
 package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * Represents data about vegan meal available in the restaurant.
@@ -11,7 +12,7 @@ public final class VeganMeal extends Meal implements Vegan {
     public VeganMeal(Long id,
                      String name,
                      Category category,
-                     Ingredient[] ingredients,
+                     Set<Ingredient> ingredients,
                      BigDecimal price,
                      int numberOfSalads
     ) {
