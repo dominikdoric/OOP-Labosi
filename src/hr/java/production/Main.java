@@ -1,10 +1,12 @@
 package hr.java.production;
 
+import hr.java.restaurant.exception.NumberNotCorrectException;
 import hr.java.restaurant.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -81,7 +83,20 @@ public class Main {
             String ingredientName = scanner.nextLine();
 
             System.out.println("Molimo unesite koliko kalorija ima " + (i + 1) + " sastojak: ");
-            BigDecimal kcal = scanner.nextBigDecimal();
+            BigDecimal kcal = BigDecimal.ZERO;
+            boolean isInputValid = false;
+            while (!isInputValid) {
+                try {
+                    kcal = scanner.nextBigDecimal();
+                    processNumberInput(kcal.intValue());
+                    isInputValid = true;
+                } catch (InputMismatchException exception) {
+                    System.out.println("Potrebno je unijeti broj, a vi ste unjeli drugaciji tip podataka");
+                    scanner.next();
+                } catch (NumberNotCorrectException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite na koji način se priprema " + (i + 1) + " sastojak: ");
             scanner.nextLine();
@@ -98,7 +113,12 @@ public class Main {
             System.out.println("Ime odabrane kategorije: " + choosenCategory.getName());
             System.out.println("Opis odabrane kategorije: " + choosenCategory.getDescription());
 
-            ingredients[i] = new Ingredient((long) i, ingredientName, new Category((long) i, choosenCategory.getName(), choosenCategory.getDescription()), kcal, preparationMethod);
+            ingredients[i] = new Ingredient(
+                    (long) i,
+                    ingredientName,
+                    new Category((long) i, choosenCategory.getName(), choosenCategory.getDescription()),
+                    kcal,
+                    preparationMethod);
         }
     }
 
@@ -111,7 +131,18 @@ public class Main {
             String mealName = scanner.nextLine();
 
             System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
-            BigDecimal mealPrice = scanner.nextBigDecimal();
+            BigDecimal mealPrice = BigDecimal.ZERO;
+            boolean isInputValid = false;
+            while (!isInputValid) {
+                try {
+                    mealPrice = scanner.nextBigDecimal();
+                    processNumberInput(mealPrice.intValue());
+                    isInputValid = true;
+                } catch (Exception exception) {
+                    System.out.println("Molimo unesite broj, unijeli ste drugaciji tip podatka.");
+                    scanner.next();
+                }
+            }
 
             System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
             System.out.println("Ovo su sve kategorije: ");
@@ -157,7 +188,19 @@ public class Main {
             String chefLastName = scanner.nextLine();
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". kuhara:");
-            BigDecimal chefSalary = scanner.nextBigDecimal();
+
+            BigDecimal chefSalary = BigDecimal.ZERO;
+            boolean isInputValid = false;
+            while (!isInputValid) {
+                try {
+                    chefSalary = scanner.nextBigDecimal();
+                    processNumberInput(chefSalary.intValue());
+                    isInputValid = true;
+                } catch (Exception exception) {
+                    System.out.println("Molimo unesite broj, unijeli ste drugaciji tip podatka.");
+                    scanner.next();
+                }
+            }
             scanner.nextLine();
 
             LocalDate startDate = LocalDate.now();
@@ -183,7 +226,18 @@ public class Main {
             String waiterLastName = scanner.nextLine();
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". konobara:");
-            BigDecimal waiterSalary = scanner.nextBigDecimal();
+            BigDecimal waiterSalary = BigDecimal.ZERO;
+            boolean isValidInput = false;
+            while (!isValidInput) {
+                try {
+                    waiterSalary = scanner.nextBigDecimal();
+                    processNumberInput(waiterSalary.intValue());
+                    isValidInput = true;
+                } catch (Exception exception) {
+                    System.out.println("Molimo unesite broj, unijeli ste drugačiji tip podatka.");
+                    scanner.next();
+                }
+            }
             scanner.nextLine();
 
             LocalDate startDate = LocalDate.now();
@@ -209,7 +263,18 @@ public class Main {
             String delivererLastName = scanner.nextLine();
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". dostavljača:");
-            BigDecimal delivererSalary = scanner.nextBigDecimal();
+            BigDecimal delivererSalary = BigDecimal.ZERO;
+            boolean isValidInput = false;
+            while (!isValidInput) {
+                try {
+                    delivererSalary = scanner.nextBigDecimal();
+                    processNumberInput(delivererSalary.intValue());
+                    isValidInput = true;
+                } catch (Exception exception) {
+                    System.out.println("Molimo unesite broj, unijeli ste drugačiji tip podatka");
+                    scanner.next();
+                }
+            }
             scanner.nextLine();
 
             LocalDate startDate = LocalDate.now();
@@ -409,5 +474,11 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static void processNumberInput(int input) throws NumberNotCorrectException {
+        if (input <= 0) {
+            throw new NumberNotCorrectException("Broj koji ste unijeli je 0 ili je manji od 0.");
+        }
     }
 }
