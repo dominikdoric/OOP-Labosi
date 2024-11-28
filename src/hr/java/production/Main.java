@@ -3,6 +3,7 @@ package hr.java.production;
 import hr.java.restaurant.model.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
@@ -61,7 +62,7 @@ public class Main {
             System.out.println("Molimo unesite opis " + (i + 1) + " kategorije: ");
             String categoryDescription = scanner.nextLine();
 
-            categories[i] = new Category(categoryName, categoryDescription);
+            categories[i] = new Category((long) i, categoryName, categoryDescription);
         }
         System.out.println("Hvala na unošenju kategorija!");
         System.out.println("Vaše kategorije su:");
@@ -97,7 +98,7 @@ public class Main {
             System.out.println("Ime odabrane kategorije: " + choosenCategory.getName());
             System.out.println("Opis odabrane kategorije: " + choosenCategory.getDescription());
 
-            ingredients[i] = new Ingredient(ingredientName, new Category(choosenCategory.getName(), choosenCategory.getDescription()), kcal, preparationMethod);
+            ingredients[i] = new Ingredient((long) i, ingredientName, new Category((long) i, choosenCategory.getName(), choosenCategory.getDescription()), kcal, preparationMethod);
         }
     }
 
@@ -143,7 +144,7 @@ public class Main {
                 System.out.print("\n\t" + (h + 1) + ". " + chosenIngredients[h].getName() + "\n");
             }*/
 
-            meals[i] = new Meal(mealName, choosenCategory, chosenIngredients, mealPrice);
+            meals[i] = new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice);
         }
     }
 
@@ -159,7 +160,12 @@ public class Main {
             BigDecimal chefSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            chefs[i] = new Chef(chefFirstName, chefLastName, chefSalary);
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
+            Contract contract = new Contract(chefSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
+            Bonus bonus = new Bonus(1500);
+
+            chefs[i] = new Chef(chefFirstName, chefLastName, contract, bonus);
         }
 
         System.out.println("Ovo su kuhari koji rade u Vašim restoranima: ");
@@ -180,7 +186,12 @@ public class Main {
             BigDecimal waiterSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            waiters[i] = new Waiter(waiterFirstName, waiterLastName, waiterSalary);
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
+            Contract contract = new Contract(waiterSalary, startDate, endDate, Contract.ContractType.PART_TIME);
+            Bonus bonus = new Bonus(500);
+
+            waiters[i] = new Waiter(waiterFirstName, waiterLastName, contract, bonus);
         }
 
         System.out.println("Ovo su konobari koji rade u Vašim restoranima: ");
@@ -201,7 +212,12 @@ public class Main {
             BigDecimal delivererSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            deliverers[i] = new Deliverer(delivererFirstName, delivererLastName, delivererSalary);
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
+            Contract contract = new Contract(delivererSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
+            Bonus bonus = new Bonus(2500);
+
+            deliverers[i] = new Deliverer(delivererFirstName, delivererLastName, contract, bonus);
         }
 
         System.out.println("Ovo su dostavljači koji rade u Vašim restoranima: ");
@@ -282,7 +298,9 @@ public class Main {
             Deliverer[] chosenDeliverers = new Deliverer[1];
             chosenDeliverers[0] = chosenDeliverer;
 
-            restaurants[i] = new Restaurant(restaurantName,
+            restaurants[i] = new Restaurant(
+                    (long) i,
+                    restaurantName,
                     address,
                     chosenMeals,
                     chosenChefs,
@@ -326,7 +344,7 @@ public class Main {
 
             LocalDateTime deliveryDateAndTime = LocalDateTime.now();
 
-            orders[i] = new Order(chosenRestaurant, chosenMeals, chosenDeliverer, deliveryDateAndTime);
+            orders[i] = new Order((long) i, chosenRestaurant, chosenMeals, chosenDeliverer, deliveryDateAndTime);
         }
     }
 

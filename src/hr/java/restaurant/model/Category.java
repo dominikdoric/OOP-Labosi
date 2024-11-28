@@ -1,10 +1,11 @@
 package hr.java.restaurant.model;
 
-public class Category {
+public class Category extends Entity {
     private String name;
     private String description;
 
-    public Category(String name, String description) {
+    public Category(Long id, String name, String description) {
+        super(id);
         this.name = name;
         this.description = description;
     }
