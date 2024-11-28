@@ -1,5 +1,8 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents data about waiter which is employed in the restaurant.
+ */
 public class Waiter extends Person {
     private Contract contract;
     private Bonus bonus;

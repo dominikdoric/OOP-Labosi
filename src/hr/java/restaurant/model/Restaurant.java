@@ -1,5 +1,8 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents data about every restaurant in the organisation.
+ */
 public class Restaurant extends Entity {
     private String name;
     private Address address;

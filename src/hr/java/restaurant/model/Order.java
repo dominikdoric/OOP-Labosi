@@ -2,6 +2,9 @@ package hr.java.restaurant.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents order which will be ordered from a customer.
+ */
 public class Order extends Entity {
     private Restaurant restaurant;
     private Meal[] meals;

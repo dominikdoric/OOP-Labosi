@@ -2,6 +2,9 @@ package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents a meal which will be available in the restaurant.
+ */
 public class Meal extends Entity {
     private String name;
     private Category category;

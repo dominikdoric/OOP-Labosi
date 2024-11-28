@@ -2,6 +2,9 @@ package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents data about vegan meal available in the restaurant.
+ */
 public final class VeganMeal extends Meal implements Vegan {
     private int numberOfSalads;
 

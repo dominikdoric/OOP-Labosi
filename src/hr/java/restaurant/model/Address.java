@@ -1,5 +1,8 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents address of a specific restaurant.
+ */
 public class Address {
     private String street;
     private String houseNumber;

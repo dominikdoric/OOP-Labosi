@@ -1,5 +1,8 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents category which will be available in the restaurant.
+ */
 public class Category extends Entity {
     private String name;
     private String description;

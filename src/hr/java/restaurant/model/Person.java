@@ -1,5 +1,9 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents base class for all classes that stores data about employees.
+ * It handles their first name and last name.
+ */
 abstract public class Person {
     String firstName;
     String lastName;

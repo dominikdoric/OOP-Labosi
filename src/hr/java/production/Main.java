@@ -431,15 +431,29 @@ public class Main {
         return null;
     }
 
-    private static Meal findMealByName(Meal[] meals, String name) {
+    /**
+     * Finds specific meal from meals list by iterating through meals list elements and
+     * returns meal which mealLame corresponds to mealLame passed as a parameter.
+     * @param meals List of all available meals in restaurant.
+     * @param mealLame Name which we want to find in the list.
+     * @return Meal which mealLame matches to mealLame in the parameter.
+     */
+    private static Meal findMealByName(Meal[] meals, String mealLame) {
         for (Meal meal : meals) {
-            if (meal.getName().equalsIgnoreCase(name)) {
+            if (meal.getName().equalsIgnoreCase(mealLame)) {
                 return meal;
             }
         }
         return null;
     }
 
+    /**
+     * Finds specific chef from chefs list by iterating through chefs list elements and
+     * returns chef which name corresponds to name passed as a parameter.
+     * @param chefs List of all available chefs in restaurant.
+     * @param chefName Name which we want to find in the list.
+     * @return Chef which name matches to name in the parameter.
+     */
     private static Chef findChefByName(Chef[] chefs, String chefName) {
         for (Chef chef : chefs) {
             if (chef.getFirstName().equalsIgnoreCase(chefName)) {
@@ -449,6 +463,13 @@ public class Main {
         return null;
     }
 
+    /**
+     * Finds specific waiter from waiters list by iterating through waiter list elements and
+     * returns waiter which name corresponds to name passed as a parameter.
+     * @param waiters List of all available waiters in restaurant.
+     * @param waiterName Name which we want to find in the list.
+     * @return Waiter which name matches to name in the parameter.
+     */
     private static Waiter findWaiterByName(Waiter[] waiters, String waiterName) {
         for (Waiter waiter : waiters) {
             if (waiter.getFirstName().equalsIgnoreCase(waiterName)) {
@@ -458,6 +479,13 @@ public class Main {
         return null;
     }
 
+    /**
+     * Finds specific deliverer from deliverers list by iterating through deliverers list elements and
+     * returns deliverer which name corresponds to name passed as a parameter.
+     * @param deliverers List of all available deliverers in restaurant.
+     * @param delivererName Name which we want to find in the list.
+     * @return Deliverer which name matches to name in the parameter.
+     */
     private static Deliverer findDelivererByName(Deliverer[] deliverers, String delivererName) {
         for (Deliverer deliverer : deliverers) {
             if (deliverer.getFirstName().equalsIgnoreCase(delivererName)) {
@@ -467,6 +495,13 @@ public class Main {
         return null;
     }
 
+    /**
+     * Finds specific restaurant from restaurants list by iterating through restaurant list elements and
+     * returns restaurant which name corresponds to name passed as a parameter.
+     * @param restaurants List of all available restaurants.
+     * @param restaurantName Name which we want to find in the list.
+     * @return Restaurant which name matches to name in the parameter.
+     */
     private static Restaurant findRestaurantByName(Restaurant[] restaurants, String restaurantName) {
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getName().equalsIgnoreCase(restaurantName)) {

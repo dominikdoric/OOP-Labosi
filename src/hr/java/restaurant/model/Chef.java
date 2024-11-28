@@ -1,5 +1,8 @@
 package hr.java.restaurant.model;
 
+/**
+ * Represents data about chef which will work in restaurant.
+ */
 public class Chef extends Person {
     private Contract contract;
     private Bonus bonus;

@@ -2,6 +2,9 @@ package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents meal with meat which will be available in the restaurant.
+ */
 public final class MeatMeal extends Meal implements Meat {
     private String freezingMethod;
 

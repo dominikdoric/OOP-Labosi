@@ -2,6 +2,9 @@ package hr.java.restaurant.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents data about vegetarian meal which will be available in the restaurant.
+ */
 public final class VegetarianMeal extends Meal implements Vegetarian {
     private boolean containsEggs;
 
