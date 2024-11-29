@@ -1,5 +1,7 @@
 package hr.java.restaurant.model;
 
+import hr.java.restaurant.enumeration.ContractType;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,11 +19,6 @@ public class Contract {
         this.startDate = startDate;
         this.endDate = endDate;
         this.contractType = contractType;
-    }
-
-    public enum ContractType {
-        FULL_TIME,
-        PART_TIME
     }
 
     public BigDecimal getSalary() {

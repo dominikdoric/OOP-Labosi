@@ -1,5 +1,6 @@
 package hr.java.production;
 
+import hr.java.restaurant.enumeration.ContractType;
 import hr.java.restaurant.exception.NumberNotCorrectException;
 import hr.java.restaurant.model.*;
 
@@ -207,7 +208,7 @@ public class Main {
 
             LocalDate startDate = LocalDate.now();
             LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(chefSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
+            Contract contract = new Contract(chefSalary, startDate, endDate, ContractType.FULL_TIME);
             Bonus bonus = new Bonus(1500);
 
             chefs.add(new Chef(chefFirstName, chefLastName, contract, bonus));
@@ -245,7 +246,7 @@ public class Main {
 
             LocalDate startDate = LocalDate.now();
             LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(waiterSalary, startDate, endDate, Contract.ContractType.PART_TIME);
+            Contract contract = new Contract(waiterSalary, startDate, endDate, ContractType.PART_TIME);
             Bonus bonus = new Bonus(500);
 
             waiters.add(new Waiter(waiterFirstName, waiterLastName, contract, bonus));
@@ -283,7 +284,7 @@ public class Main {
 
             LocalDate startDate = LocalDate.now();
             LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(delivererSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
+            Contract contract = new Contract(delivererSalary, startDate, endDate, ContractType.FULL_TIME);
             Bonus bonus = new Bonus(2500);
 
             deliverers.add(new Deliverer(delivererFirstName, delivererLastName, contract, bonus));
