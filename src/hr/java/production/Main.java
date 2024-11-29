@@ -268,6 +268,15 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for inserting and storing details about vegan meals
+     * which user inserted.
+     *
+     * @param scanner     Object which allows users to insert data.
+     * @param veganMeals  All vegan meals which user has already inserted.
+     * @param categories  All categories which user has already inserted.
+     * @param ingredients All ingredients which user has already inserted.
+     */
     private static void insertVeganMeals(Scanner scanner,
                                          Set<VeganMeal> veganMeals,
                                          Set<Category> categories,
@@ -315,6 +324,15 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for inserting and storing details about vegetarian meals
+     * which user inserted.
+     *
+     * @param scanner         Object which allows users to insert data.
+     * @param vegetarianMeals All vegetarian meals which user has already inserted.
+     * @param categories      All categories which user has already inserted.
+     * @param ingredients     All ingredients which user has already inserted.
+     */
     private static void insertVegetarianMeals(Scanner scanner,
                                               Set<VegetarianMeal> vegetarianMeals,
                                               Set<Category> categories,
@@ -363,6 +381,15 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for inserting and storing details about meat meals
+     * which user inserted.
+     *
+     * @param scanner     Object which allows users to insert data.
+     * @param meatMeals   All vegan meals which user has already inserted.
+     * @param categories  All categories which user has already inserted.
+     * @param ingredients All ingredients which user has already inserted.
+     */
     private static void insertMeatMeals(Scanner scanner,
                                         Set<MeatMeal> meatMeals,
                                         Set<Category> categories,
@@ -1018,6 +1045,12 @@ public class Main {
         }
     }
 
+    /**
+     * Function which from list of orders finds and returns which restaurant has the biggest order.
+     *
+     * @param orders Every order all restaurants got.
+     * @return Restaurant with the biggest order.
+     */
     private static Restaurant[] findRestaurantsWithBiggestOrder(Set<Order> orders) {
         if (orders == null || orders.isEmpty()) return new Restaurant[0];
 
@@ -1048,6 +1081,12 @@ public class Main {
         return finalResult;
     }
 
+    /**
+     * Function which from list of orders finds and returns deliverer who delivered most.
+     *
+     * @param orders Every order all restaurants got.
+     * @return Deliverer which had most deliveries.
+     */
     private static Deliverer[] findDelivererWithMostDeliveries(Set<Order> orders) {
         if (orders == null || orders.isEmpty()) {
             return new Deliverer[0];
@@ -1081,6 +1120,13 @@ public class Main {
         return topDeliverers.toArray(new Deliverer[0]);
     }
 
+    /**
+     * Function which lets user input date in String and then parses it into LocalDate.
+     * If format is not correct user is prompted again to insert date.
+     *
+     * @param scanner Object which allows user to input data into console.
+     * @return Date user inputted but in LocalDate data type.
+     */
     private static LocalDate insertLocalDate(Scanner scanner) {
         LocalDate date = null;
 
@@ -1096,6 +1142,12 @@ public class Main {
         return date;
     }
 
+    /**
+     * Function which allows user to insert what contract type does the employee have.
+     *
+     * @param scanner Object which allows user to insert data through console.
+     * @return Returns contract type user inserted through console.
+     */
     private static ContractType insertContractType(Scanner scanner) {
         int contractOption = -1;
         while (contractOption != 1 && contractOption != 2) {
@@ -1115,6 +1167,14 @@ public class Main {
         return contractOption == 1 ? ContractType.FULL_TIME : ContractType.PART_TIME;
     }
 
+    /**
+     * Function which returns employee with the biggest salary.
+     *
+     * @param chefs      All chefs which are working in the restaurants.
+     * @param waiters    All waiters which are working in the restaurants.
+     * @param deliverers All deliverers which are working in the restaurants.
+     * @return Employee with the biggest salary.
+     */
     private static String getEmployeeWithBiggestSalary(Set<Chef> chefs,
                                                        Set<Waiter> waiters,
                                                        Set<Deliverer> deliverers) {
@@ -1145,6 +1205,14 @@ public class Main {
         return employeeWithBiggestSalary;
     }
 
+    /**
+     * Function which returns employee with the longest contract.
+     *
+     * @param chefs      All chefs which are working in the restaurants.
+     * @param waiters    All waiters which are working in the restaurants.
+     * @param deliverers All deliverers which are working in the restaurants.
+     * @return Employee with the longest contract.
+     */
     private static String getEmployeeWithLongestContract(Set<Chef> chefs,
                                                          Set<Waiter> waiters,
                                                          Set<Deliverer> deliverers) {
@@ -1175,6 +1243,13 @@ public class Main {
         return employeeWithLongestContract;
     }
 
+    /**
+     * Function which determines does vegetarian meal contains eggs based on what user
+     * inputted through console.
+     *
+     * @param scanner Object which allows user to insert data through console.
+     * @return Boolean value if meal contains eggs or i doesn't contain.
+     */
     private static boolean doesVegetarianMealContainsEggs(Scanner scanner) {
         while (true) {
             int input;
@@ -1189,6 +1264,14 @@ public class Main {
         }
     }
 
+    /**
+     * Function which returns meal with the most calories.
+     *
+     * @param veganMeals      All vegan meals that are available in the restaurant.
+     * @param vegetarianMeals All vegetarian meals that are available in the restaurant.
+     * @param meatMeals       All meat meals that are available in the restaurant.
+     * @return Meal with the most calories.
+     */
     private static String getMealWithMostCalories(Set<VeganMeal> veganMeals,
                                                   Set<VegetarianMeal> vegetarianMeals,
                                                   Set<MeatMeal> meatMeals) {
@@ -1209,6 +1292,14 @@ public class Main {
         return biggestCalorieMealData;
     }
 
+    /**
+     * Function which returns meal with the least number of calories.
+     *
+     * @param veganMeals      All vegan meals that are available in the restaurant.
+     * @param vegetarianMeals All vegetarian meals that are available in the restaurant.
+     * @param meatMeals       All meat meals that are available in the restaurant.
+     * @return Meal with the least number of calories.
+     */
     private static String getMealWithLeastCalories(Set<VeganMeal> veganMeals,
                                                    Set<VegetarianMeal> vegetarianMeals,
                                                    Set<MeatMeal> meatMeals) {
