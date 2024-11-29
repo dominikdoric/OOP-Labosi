@@ -9,4 +9,9 @@ public class Deliverer extends Person {
         this.contract = contract;
         this.bonus = bonus;
     }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }
