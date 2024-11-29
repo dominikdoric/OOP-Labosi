@@ -185,6 +185,7 @@ public class Main {
             for (int j = 0; j < categories.length; j++) {
                 System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
             }
+
             scanner.nextLine();
             System.out.println("Ovdje unesite kategoriju jela: ");
             String categoryName = scanner.nextLine();
@@ -211,6 +212,7 @@ public class Main {
 
             System.out.println("Molimo unesite koliko različitih vrsta salata ide u " + (i + 1) + ". vegansko jelo: ");
             int numberOfSalads = scanner.nextInt();
+            scanner.nextLine();
 
             veganMeals[i] = new VeganMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, numberOfSalads);
         }
@@ -221,8 +223,8 @@ public class Main {
                                               Category[] categories,
                                               Ingredient[] ingredients) {
         for (int i = 0; i < NUMBER_OF_VEGETARIAN_MEALS; i++) {
-            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
-            String veganMealName = scanner.nextLine();
+            System.out.println("Molimo unesite ime " + (i + 1) + ". vegetarijanskog jela: ");
+            String vegetarianMealName = scanner.nextLine();
 
             System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
             System.out.println("Ovo su sve kategorije: ");
@@ -253,12 +255,12 @@ public class Main {
             System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
             BigDecimal mealPrice = scanner.nextBigDecimal();
 
-            System.out.println("Molimo unesite sadrži li " + (i + 1) + ". vegansko jelo jaja. Unesite broj pokraj točnog odgovora.");
+            System.out.println("Molimo unesite sadrži li " + (i + 1) + ". vegetarijansko jelo jaja. Unesite broj pokraj točnog odgovora.");
             System.out.println("1. Ovo jelo SADRŽI jaja.");
             System.out.println("2. Ovo jelo NE SADRŽI jaja.");
             boolean containsEggs = doesVegetarianMealContainsEggs(scanner);
 
-            vegetarianMeals[i] = new VegetarianMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, containsEggs);
+            vegetarianMeals[i] = new VegetarianMeal((i + 1L), vegetarianMealName, choosenCategory, chosenIngredients, mealPrice, containsEggs);
         }
     }
 
@@ -267,8 +269,8 @@ public class Main {
                                         Category[] categories,
                                         Ingredient[] ingredients) {
         for (int i = 0; i < NUMBER_OF_MEAT_MEALS; i++) {
-            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
-            String veganMealName = scanner.nextLine();
+            System.out.println("Molimo unesite ime " + (i + 1) + ". mesnog jela: ");
+            String meatMealName = scanner.nextLine();
 
             System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
             System.out.println("Ovo su sve kategorije: ");
@@ -298,11 +300,12 @@ public class Main {
 
             System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
             BigDecimal mealPrice = scanner.nextBigDecimal();
+            scanner.nextLine();
 
             System.out.println("Molimo unesite proces zamrzavanja " + (i + 1) + ". mesnog jela: ");
             String freezingMethod = scanner.nextLine();
 
-            meatMeals[i] = new MeatMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, freezingMethod);
+            meatMeals[i] = new MeatMeal((i + 1L), meatMealName, choosenCategory, chosenIngredients, mealPrice, freezingMethod);
         }
     }
 
