@@ -22,4 +22,25 @@ public class Deliverer extends Person {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public Bonus getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(Bonus bonus) {
+        this.bonus = bonus;
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }
