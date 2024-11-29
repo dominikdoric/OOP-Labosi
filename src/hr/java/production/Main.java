@@ -19,6 +19,10 @@ public class Main {
     static final int NUMBER_OF_RESTAURANTS = 3;
     static final int NUMBER_OF_ORDERS = 3;
 
+    /**
+     * Starting point of our application.
+     * This function is first called when we start application.
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Set<Category> categories = new HashSet<>(NUMBER_OF_CATEGORIES);
@@ -55,6 +59,12 @@ public class Main {
         insertOrders(scanner, orders, restaurants, meals, deliverers);
     }
 
+    /**
+     * Function which contains logic for asking user to insert which categories will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param categories Categories field with default size which allows us to iterate through its size and store value.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertCategories(Set<Category> categories, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " kategorije: ");
@@ -74,6 +84,14 @@ public class Main {
     }
 
     // TODO: Implementirati da kada korisnik ne unese točno ime kategorije da ga traži da ponovno unese
+
+    /**
+     * Function which contains logic for asking user to insert which ingredients will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param ingredients Ingredients field with default size to iterate through it.
+     * @param categories Categories field with default size to iterate through it.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertIngredients(Set<Ingredient> ingredients,
                                           Set<Category> categories,
                                           Scanner scanner) {
@@ -123,6 +141,14 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for asking user to insert which categories will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param meals Meals field with default size to iterate through it.
+     * @param ingredients Ingredients field with default size to iterate through it.
+     * @param categories Categories field with default size to iterate through it.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertMeals(Set<Meal> meals,
                                     Set<Ingredient> ingredients,
                                     Set<Category> categories,
@@ -182,6 +208,12 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for asking user to insert which chefs will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param chefs Chefs field with default size to iterate through it.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertChefs(Set<Chef> chefs, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CHEFS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". kuhara:");
@@ -221,6 +253,12 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for asking user to insert which waiters will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param waiters Waiters field with default size to iterate through it.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertWaiters(Set<Waiter> waiters, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_WAITERS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". konobara:");
@@ -259,6 +297,12 @@ public class Main {
         }
     }
 
+    /**
+     * Function which contains logic for asking user to insert which deliverers will be available
+     * in the restaurant and after inserting them displaying them to users.
+     * @param deliverers Deliverers field with default size to iterate through it.
+     * @param scanner Object which allows users to insert values through console.
+     */
     private static void insertDeliverers(Set<Deliverer> deliverers, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_DELIVERERS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". dostavljača:");
@@ -297,6 +341,15 @@ public class Main {
         }
     }
 
+    /**
+     * Function which is used for inserting data about specific restaurant.
+     * @param scanner Object which allows users to insert values through console.
+     * @param restaurants Restaurants field with default size to iterate through it.
+     * @param meals Meals field with default size to iterate through it.
+     * @param chefs Chefs field with default size to iterate through it.
+     * @param waiters Waiters field with default size to iterate through it.
+     * @param deliverers Deliverers field with default size to iterate through it.
+     */
     private static void insertRestaurants(Scanner scanner,
                                           Set<Restaurant> restaurants,
                                           Set<Meal> meals,
@@ -384,6 +437,14 @@ public class Main {
         }
     }
 
+    /**
+     * Function which is used for inserting data about specific order.
+     * @param scanner Object which allows users to insert value through console.
+     * @param orders Orders field with default size to iterate through it.
+     * @param restaurants Restaurants field with default size to iterate through it.
+     * @param meals Meals field with default size to iterate through it.
+     * @param deliverers Deliverers field with default size to iterate through it.
+     */
     private static void insertOrders(Scanner scanner,
                                      Set<Order> orders,
                                      Set<Restaurant> restaurants,
@@ -426,18 +487,34 @@ public class Main {
         }
     }
 
-    private static Category findCategoryByName(Set<Category> categories, String name) {
+    /**
+     * Finds specific category from category list by iterating through category list elements and
+     * returns category which categoryName corresponds to categoryName passed as a parameter.
+     *
+     * @param categories     List of all available categories in restaurant.
+     * @param categoriesName Name which we want to find in the list.
+     * @return Category which categoryName matches to categoryName in the parameter.
+     */
+    private static Category findCategoryByName(Set<Category> categories, String categoriesName) {
         for (Category category : categories) {
-            if (category.getName().equalsIgnoreCase(name)) {
+            if (category.getName().equalsIgnoreCase(categoriesName)) {
                 return category;
             }
         }
         return null;
     }
 
-    private static Ingredient findIngredientByName(Set<Ingredient> ingredients, String name) {
+    /**
+     * Finds specific ingredient from ingredients list by iterating through ingredients list elements and
+     * returns ingredient which ingredientName corresponds to ingredientName passed as a parameter.
+     *
+     * @param ingredients    List of all available meals in restaurant.
+     * @param ingredientName Name which we want to find in the list.
+     * @return Meal which mealLame matches to mealLame in the parameter.
+     */
+    private static Ingredient findIngredientByName(Set<Ingredient> ingredients, String ingredientName) {
         for (Ingredient ingredient : ingredients) {
-            if (ingredient.getName().equalsIgnoreCase(name)) {
+            if (ingredient.getName().equalsIgnoreCase(ingredientName)) {
                 return ingredient;
             }
         }
@@ -447,8 +524,7 @@ public class Main {
     /**
      * Finds specific meal from meals list by iterating through meals list elements and
      * returns meal which mealLame corresponds to mealLame passed as a parameter.
-     *
-     * @param meals    List of all available meals in restaurant.
+     * @param meals List of all available meals in restaurant.
      * @param mealLame Name which we want to find in the list.
      * @return Meal which mealLame matches to mealLame in the parameter.
      */
@@ -529,6 +605,13 @@ public class Main {
         return null;
     }
 
+    /**
+     * Function which checks value of input number and if number is zero or negative
+     * throws NumberNotCorrectException.
+     *
+     * @param input Input number which we want to process
+     * @throws NumberNotCorrectException If number is zero or negative
+     */
     private static void processNumberInput(int input) throws NumberNotCorrectException {
         if (input <= 0) {
             throw new NumberNotCorrectException("Broj koji ste unijeli je 0 ili je manji od 0.");
