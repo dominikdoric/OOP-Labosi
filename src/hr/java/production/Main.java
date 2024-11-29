@@ -5,6 +5,7 @@ import hr.java.restaurant.model.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +77,6 @@ public class Main {
         }
     }
 
-    // TODO: Implementirati da kada korisnik ne unese točno ime kategorije da ga traži da ponovno unese
     private static void insertIngredients(Ingredient[] ingredients,
                                           Category[] categories,
                                           Scanner scanner) {
@@ -144,12 +144,6 @@ public class Main {
                 chosenIngredients[k] = choosenIngredient;
             }
 
-            /*
-            System.out.println("Vaši odabrani sastojci su: ");
-            for (int h = 0; h < chosenIngredients.length; h++) {
-                System.out.print("\n\t" + (h + 1) + ". " + chosenIngredients[h].getName() + "\n");
-            }*/
-
             meals[i] = new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice);
         }
     }
@@ -166,10 +160,23 @@ public class Main {
             BigDecimal chefSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(chefSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
-            Bonus bonus = new Bonus(1500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ".kuhar počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ".kuhara: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". kuhara: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ".kuhara: ");
+            int chefBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(chefSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(chefBonus);
 
             chefs[i] = new Chef(chefFirstName, chefLastName, contract, bonus);
         }
@@ -192,10 +199,23 @@ public class Main {
             BigDecimal waiterSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(waiterSalary, startDate, endDate, Contract.ContractType.PART_TIME);
-            Bonus bonus = new Bonus(500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ". konobar počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ". konobara: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". konobara: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ". konobara: ");
+            int waiterBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(waiterSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(waiterBonus);
 
             waiters[i] = new Waiter(waiterFirstName, waiterLastName, contract, bonus);
         }
@@ -218,10 +238,23 @@ public class Main {
             BigDecimal delivererSalary = scanner.nextBigDecimal();
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(delivererSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
-            Bonus bonus = new Bonus(2500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ". dostavljač počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ". dostavljača: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". dostavljača: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ". dostavljača: ");
+            int delivererBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(delivererSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(delivererBonus);
 
             deliverers[i] = new Deliverer(delivererFirstName, delivererLastName, contract, bonus);
         }
@@ -478,5 +511,39 @@ public class Main {
         }
 
         return topDeliverers.toArray(new Deliverer[0]);
+    }
+
+    private static LocalDate insertLocalDate(Scanner scanner) {
+        LocalDate date = null;
+
+        while (date == null) {
+            String dateInput = scanner.nextLine();
+            try {
+                date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                System.out.println("Uneseni datum: " + date);
+            } catch (Exception exception) {
+                System.out.println("Pogrešan format! Molimo pokušajte ponovno.");
+            }
+        }
+        return date;
+    }
+
+    private static Contract.ContractType insertContractType(Scanner scanner) {
+        int contractOption = -1;
+        while (contractOption != 1 && contractOption != 2) {
+            System.out.println("Ovo su opcije ugovora. Odaberite broj ispred opcije ugovora: ");
+            System.out.println("1. Puno radno vrijeme");
+            System.out.println("2. Pola radnog vremena");
+            System.out.println("Ovdje unesite broj opcije ugovora: ");
+            try {
+                contractOption = Integer.parseInt(scanner.nextLine());
+                if (contractOption != 1 && contractOption != 2) {
+                    System.out.println("Unijeli ste nepostojeću opciju! Molimo pokušajte ponovno.");
+                }
+            } catch (NumberFormatException exception) {
+                System.out.println("Pogrešan unos! Molimo unesite broj (1 ili 2).");
+            }
+        }
+        return contractOption == 1 ? Contract.ContractType.FULL_TIME : Contract.ContractType.PART_TIME;
     }
 }
