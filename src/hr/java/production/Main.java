@@ -8,6 +8,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -19,6 +23,9 @@ public class Main {
     static final int NUMBER_OF_DELIVERERS = 3;
     static final int NUMBER_OF_RESTAURANTS = 3;
     static final int NUMBER_OF_ORDERS = 3;
+    static final int NUMBER_OF_VEGAN_MEALS = 3;
+    static final int NUMBER_OF_VEGETARIAN_MEALS = 3;
+    static final int NUMBER_OF_MEAT_MEALS = 3;
 
     /**
      * Starting point of our application.
@@ -34,6 +41,9 @@ public class Main {
         Deliverer[] deliverers = new Deliverer[NUMBER_OF_DELIVERERS];
         Restaurant[] restaurants = new Restaurant[NUMBER_OF_RESTAURANTS];
         Order[] orders = new Order[NUMBER_OF_ORDERS];
+        VeganMeal[] veganMeals = new VeganMeal[NUMBER_OF_VEGAN_MEALS];
+        VegetarianMeal[] vegetarianMeals = new VegetarianMeal[NUMBER_OF_VEGETARIAN_MEALS];
+        MeatMeal[] meatMeals = new MeatMeal[NUMBER_OF_MEAT_MEALS];
 
         System.out.println("Molimo Vas unesite koji će sve kategorije biti u Vašim restoranima.");
         insertCategories(categories, scanner);
@@ -44,6 +54,21 @@ public class Main {
         System.out.println("Molimo Vas unesite koja će sve jela biti u Vašim restoranima.");
         insertMeals(meals, ingredients, categories, scanner);
 
+        System.out.println("Molimo Vas unesite koja će sve veganska jela biti u Vašim restoranima.");
+        insertVeganMeals(scanner, veganMeals, categories, ingredients);
+
+        System.out.println("Molimo Vas unesite koja će sve vegetarijanska jela biti u Vašim restoranima.");
+        insertVegetarianMeals(scanner, vegetarianMeals, categories, ingredients);
+
+        System.out.println("Molimo Vas unesite koja će sve mesna jela biti u Vašim restoranima.");
+        insertMeatMeals(scanner, meatMeals, categories, ingredients);
+
+        System.out.println("Ovo je jelo koje ima najveći broj kilokalorija: ");
+        System.out.println(getMealWithMostCalories(veganMeals, vegetarianMeals, meatMeals));
+
+        System.out.println("Ovo je jelo koje ima najmanji broj kilokalorija: ");
+        System.out.println(getMealWithLeastCalories(veganMeals, vegetarianMeals, meatMeals));
+
         System.out.println("Molimo Vas unesite 3 kuhara koji će raditi.");
         insertChefs(chefs, scanner);
 
@@ -53,12 +78,17 @@ public class Main {
         System.out.println("Molimo vas unesite 3 dostavljača");
         insertDeliverers(deliverers, scanner);
 
+        System.out.println(getEmployeeWithBiggestSalary(chefs, waiters, deliverers));
+        System.out.println(getEmployeeWithLongestContract(chefs, waiters, deliverers));
+
         System.out.println("Molimo vas unesite 3 Restorana");
         insertRestaurants(scanner, restaurants, meals, chefs, waiters, deliverers);
 
         System.out.println("Molimo vas unesite naruđbu");
         insertOrders(scanner, orders, restaurants, meals, deliverers);
 
+        System.out.println("Restoran sa najskupljom naruđbom je: " + Arrays.toString(findRestaurantsWithBiggestOrder(orders)));
+        System.out.println("Dostavljač s najviše dostava je: " + Arrays.toString(findDelivererWithMostDeliveries(orders)));
     }
 
     /**
@@ -94,8 +124,6 @@ public class Main {
             System.out.print("\n\t" + (i + 1) + ". " + categories[i].getName() + "\n");
         }
     }
-
-    // TODO: Implementirati da kada korisnik ne unese točno ime kategorije da ga traži da ponovno unese
 
     /**
      * Function which contains logic for asking user to insert which ingredients will be available
@@ -149,10 +177,10 @@ public class Main {
                 System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
             }
 
+            System.out.println("Ovdje upišite kojoj kategoriji pripada ovaj sastojak: ");
             String categoryName = scanner.nextLine();
             Category choosenCategory = findCategoryByName(categories, categoryName);
             System.out.println("Ime odabrane kategorije: " + choosenCategory.getName());
-            System.out.println("Opis odabrane kategorije: " + choosenCategory.getDescription());
 
             ingredients[i] = new Ingredient(
                     (long) i,
@@ -210,6 +238,7 @@ public class Main {
                 System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
             }
             scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
             String categoryName = scanner.nextLine();
             Category choosenCategory = findCategoryByName(categories, categoryName);
 
@@ -229,13 +258,141 @@ public class Main {
                 chosenIngredients[k] = choosenIngredient;
             }
 
-            /*
-            System.out.println("Vaši odabrani sastojci su: ");
-            for (int h = 0; h < chosenIngredients.length; h++) {
-                System.out.print("\n\t" + (h + 1) + ". " + chosenIngredients[h].getName() + "\n");
-            }*/
-
             meals[i] = new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice);
+        }
+    }
+
+    private static void insertVeganMeals(Scanner scanner,
+                                         VeganMeal[] veganMeals,
+                                         Category[] categories,
+                                         Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_VEGAN_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite koliko različitih vrsta salata ide u " + (i + 1) + ". vegansko jelo: ");
+            int numberOfSalads = scanner.nextInt();
+
+            veganMeals[i] = new VeganMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, numberOfSalads);
+        }
+    }
+
+    private static void insertVegetarianMeals(Scanner scanner,
+                                              VegetarianMeal[] vegetarianMeals,
+                                              Category[] categories,
+                                              Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_VEGETARIAN_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite sadrži li " + (i + 1) + ". vegansko jelo jaja. Unesite broj pokraj točnog odgovora.");
+            System.out.println("1. Ovo jelo SADRŽI jaja.");
+            System.out.println("2. Ovo jelo NE SADRŽI jaja.");
+            boolean containsEggs = doesVegetarianMealContainsEggs(scanner);
+
+            vegetarianMeals[i] = new VegetarianMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, containsEggs);
+        }
+    }
+
+    private static void insertMeatMeals(Scanner scanner,
+                                        MeatMeal[] meatMeals,
+                                        Category[] categories,
+                                        Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_MEAT_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite proces zamrzavanja " + (i + 1) + ". mesnog jela: ");
+            String freezingMethod = scanner.nextLine();
+
+            meatMeals[i] = new MeatMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, freezingMethod);
         }
     }
 
@@ -280,10 +437,23 @@ public class Main {
             }
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(chefSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
-            Bonus bonus = new Bonus(1500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ".kuhar počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ".kuhara: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". kuhara: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ".kuhara: ");
+            int chefBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(chefSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(chefBonus);
 
             chefs[i] = new Chef(chefFirstName, chefLastName, contract, bonus);
         }
@@ -336,10 +506,23 @@ public class Main {
             }
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(waiterSalary, startDate, endDate, Contract.ContractType.PART_TIME);
-            Bonus bonus = new Bonus(500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ". konobar počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ". konobara: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". konobara: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ". konobara: ");
+            int waiterBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(waiterSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(waiterBonus);
 
             waiters[i] = new Waiter(waiterFirstName, waiterLastName, contract, bonus);
         }
@@ -393,10 +576,23 @@ public class Main {
             }
             scanner.nextLine();
 
-            LocalDate startDate = LocalDate.now();
-            LocalDate endDate = LocalDate.ofYearDay(2024, 360);
-            Contract contract = new Contract(delivererSalary, startDate, endDate, Contract.ContractType.FULL_TIME);
-            Bonus bonus = new Bonus(2500);
+            System.out.println("Molimo unesite kada je " + (i + 1) + ". dostavljač počeo raditi: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate startDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite kada je zadnji radni dan " + (i + 1) + ". dostavljača: ");
+            System.out.println("Molimo datum unesite u sljedećem formatu: dd-MM-yyyy");
+            LocalDate endDate = insertLocalDate(scanner);
+
+            System.out.println("Molimo unesite koji je tip ugovora za " + (i + 1) + ". dostavljača: ");
+            Contract.ContractType contractType = insertContractType(scanner);
+
+            System.out.println("Molimo unesite koliki je bonus na kraju godine za " + (i + 1) + ". dostavljača: ");
+            int delivererBonus = scanner.nextInt();
+            scanner.nextLine();
+
+            Contract contract = new Contract(delivererSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(delivererBonus);
 
             deliverers[i] = new Deliverer(delivererFirstName, delivererLastName, contract, bonus);
         }
@@ -448,7 +644,7 @@ public class Main {
             System.out.println("Molimo unesite ime grada u kojem se nalazi " + (i + 1) + ". restoran: ");
             String cityName = scanner.nextLine();
 
-            System.out.println("Molimo unesite poštanski broj: " + (i + 1) + ". restorana: ");
+            System.out.println("Molimo unesite poštanski broj " + (i + 1) + ". restorana: ");
             String postalCode = scanner.nextLine();
 
             Address address = new Address(streetName, houseNumber, cityName, postalCode);
@@ -456,8 +652,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koje će jelo biti u Vašem " + (i + 1) + ". restoranu:");
             System.out.println("Ovo su sva moguća jela:");
             for (int j = 0; j < meals.length; j++) {
-                String mealName = meals[i].getName();
-                System.out.println("1. " + mealName);
+                String mealName = meals[j].getName();
+                System.out.println((j + 1) + ". " + mealName);
             }
 
             String mealName = scanner.nextLine();
@@ -468,8 +664,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koji kuhar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući kuhari: ");
             for (int j = 0; j < chefs.length; j++) {
-                String chefName = chefs[i].getFirstName();
-                System.out.println("1. " + chefName);
+                String chefName = chefs[j].getFirstName();
+                System.out.println((j + 1) + ". " + chefName);
             }
 
             String chefName = scanner.nextLine();
@@ -480,8 +676,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koji konobar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući konobari: ");
             for (int j = 0; j < waiters.length; j++) {
-                String waiterName = waiters[i].getFirstName();
-                System.out.println("1. " + waiterName);
+                String waiterName = waiters[j].getFirstName();
+                System.out.println((j + 1) + ". " + waiterName);
             }
 
             String waiterName = scanner.nextLine();
@@ -492,7 +688,7 @@ public class Main {
             System.out.println("Molimo Vas unesite koji dostavljač će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući dostavljači: ");
             for (int j = 0; j < deliverers.length; j++) {
-                System.out.println("1. " + deliverers[i].getFirstName());
+                System.out.println((j + 1) + ". " + deliverers[j].getFirstName());
             }
 
             String delivererName = scanner.nextLine();
@@ -526,11 +722,11 @@ public class Main {
                                      Meal[] meals,
                                      Deliverer[] deliverers) {
 
-        System.out.println("Ovjde možete napraviti svoju naruđbu: ");
+        System.out.println("Ovdjee možete napraviti svoju naruđbu: ");
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             System.out.println("Iz kojeg restorana želite naručiti " + (i + 1) + ". naruđbu?");
             for (int j = 0; j < restaurants.length; j++) {
-                System.out.println("1. " + restaurants[j].getName());
+                System.out.println((j + 1) + ". " + restaurants[j].getName());
             }
             String restaurantName = scanner.nextLine();
             Restaurant chosenRestaurant = findRestaurantByName(restaurants, restaurantName);
@@ -797,5 +993,213 @@ public class Main {
                 throw new EntityAlreadyInsertedException("Restoran sa imenom " + restaurantName + " već postoji. Molimo unesite kuhara sa drugim imenom.");
             }
         }
+    }
+
+    private static Restaurant[] findRestaurantsWithBiggestOrder(Order[] orders) {
+        if (orders == null || orders.length == 0) return new Restaurant[0];
+
+        BigDecimal highestPrice = BigDecimal.ZERO;
+        Restaurant[] result = new Restaurant[orders.length];
+        int count = 0;
+
+        for (Order order : orders) {
+            if (order != null && order.getMeals() != null) {
+                for (Meal meal : order.getMeals()) {
+                    if (meal != null) {
+                        int comparison = meal.getPrice().compareTo(highestPrice);
+                        if (comparison > 0) {
+                            highestPrice = meal.getPrice();
+                            result = new Restaurant[orders.length];
+                            result[0] = order.getRestaurant();
+                            count = 1;
+                        } else if (comparison == 0) {
+                            result[count++] = order.getRestaurant();
+                        }
+                    }
+                }
+            }
+        }
+
+        Restaurant[] finalResult = new Restaurant[count];
+        System.arraycopy(result, 0, finalResult, 0, count);
+        return finalResult;
+    }
+
+    private static Deliverer[] findDelivererWithMostDeliveries(Order[] orders) {
+        if (orders == null || orders.length == 0) {
+            return new Deliverer[0];
+        }
+
+        List<Deliverer> deliverers = new ArrayList<>();
+        List<Integer> deliveryCounts = new ArrayList<>();
+
+        for (Order order : orders) {
+            if (order != null && order.getDeliverer() != null) {
+                Deliverer deliverer = order.getDeliverer();
+                int index = deliverers.indexOf(deliverer);
+                if (index == -1) {
+                    deliverers.add(deliverer);
+                    deliveryCounts.add(1);
+                } else {
+                    deliveryCounts.set(index, deliveryCounts.get(index) + 1);
+                }
+            }
+        }
+
+        int maxDeliveries = deliveryCounts.stream().max(Integer::compare).orElse(0);
+
+        List<Deliverer> topDeliverers = new ArrayList<>();
+        for (int i = 0; i < deliverers.size(); i++) {
+            if (deliveryCounts.get(i) == maxDeliveries) {
+                topDeliverers.add(deliverers.get(i));
+            }
+        }
+
+        return topDeliverers.toArray(new Deliverer[0]);
+    }
+
+    private static LocalDate insertLocalDate(Scanner scanner) {
+        LocalDate date = null;
+
+        while (date == null) {
+            String dateInput = scanner.nextLine();
+            try {
+                date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                System.out.println("Uneseni datum: " + date);
+            } catch (Exception exception) {
+                System.out.println("Pogrešan format! Molimo pokušajte ponovno.");
+            }
+        }
+        return date;
+    }
+
+    private static Contract.ContractType insertContractType(Scanner scanner) {
+        int contractOption = -1;
+        while (contractOption != 1 && contractOption != 2) {
+            System.out.println("Ovo su opcije ugovora. Odaberite broj ispred opcije ugovora: ");
+            System.out.println("1. Puno radno vrijeme");
+            System.out.println("2. Pola radnog vremena");
+            System.out.println("Ovdje unesite broj opcije ugovora: ");
+            try {
+                contractOption = Integer.parseInt(scanner.nextLine());
+                if (contractOption != 1 && contractOption != 2) {
+                    System.out.println("Unijeli ste nepostojeću opciju! Molimo pokušajte ponovno.");
+                }
+            } catch (NumberFormatException exception) {
+                System.out.println("Pogrešan unos! Molimo unesite broj (1 ili 2).");
+            }
+        }
+        return contractOption == 1 ? Contract.ContractType.FULL_TIME : Contract.ContractType.PART_TIME;
+    }
+
+    private static String getEmployeeWithBiggestSalary(Chef[] chefs, Waiter[] waiters, Deliverer[] deliverers) {
+        String employeeWithBiggestSalary = "";
+        BigDecimal maxSalary = BigDecimal.ZERO;
+
+        for (Chef chef : chefs) {
+            if (chef != null && chef.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = chef.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je kuhar " + chef.getFirstName() + " " + chef.getLastName();
+            }
+        }
+
+        for (Waiter waiter : waiters) {
+            if (waiter != null && waiter.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = waiter.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je konobar " + waiter.getFirstName() + " " + waiter.getLastName();
+            }
+        }
+
+        for (Deliverer deliverer : deliverers) {
+            if (deliverer != null && deliverer.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = deliverer.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je dostavljač " + deliverer.getFirstName() + " " + deliverer.getLastName();
+            }
+        }
+
+        return employeeWithBiggestSalary;
+    }
+
+    private static String getEmployeeWithLongestContract(Chef[] chefs, Waiter[] waiters, Deliverer[] deliverers) {
+        String employeeWithLongestContract = "";
+        LocalDate longestContract = LocalDate.now();
+
+        for (Chef chef : chefs) {
+            if (chef != null && chef.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = chef.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je kuhar " + chef.getFirstName() + " " + chef.getLastName();
+            }
+        }
+
+        for (Waiter waiter : waiters) {
+            if (waiter != null && waiter.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = waiter.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je konobar " + waiter.getFirstName() + " " + waiter.getLastName();
+            }
+        }
+
+        for (Deliverer deliverer : deliverers) {
+            if (deliverer != null && deliverer.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = deliverer.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je dostavljač " + deliverer.getFirstName() + " " + deliverer.getLastName();
+            }
+        }
+
+        return employeeWithLongestContract;
+    }
+
+    private static boolean doesVegetarianMealContainsEggs(Scanner scanner) {
+        while (true) {
+            int input;
+            try {
+                input = Integer.parseInt(scanner.nextLine());
+                if (input == 1) return true;
+                else if (input == 2) return false;
+                else System.out.println("Pogrešan unos! Molimo unesite ili 1 ili 2.");
+            } catch (NumberFormatException exception) {
+                System.out.println("Molimo unesite valjani broj (1 ili 2).");
+            }
+        }
+    }
+
+    private static String getMealWithMostCalories(VeganMeal[] veganMeals,
+                                                  VegetarianMeal[] vegetarianMeals,
+                                                  MeatMeal[] meatMeals) {
+        BigDecimal biggestCalorie = BigDecimal.ZERO;
+        String biggestCalorieMealData = "";
+
+        for (VeganMeal veganMeal : veganMeals) {
+            biggestCalorieMealData = "Ime: " + veganMeal.getName() + ", kategorija:  " + veganMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (VegetarianMeal vegetarianMeal : vegetarianMeals) {
+            biggestCalorieMealData = "Ime: " + vegetarianMeal.getName() + ", kategorija:  " + vegetarianMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (MeatMeal meatMeal : meatMeals) {
+            biggestCalorieMealData = "Ime: " + meatMeal.getName() + ", kategorija:  " + meatMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+        return biggestCalorieMealData;
+    }
+
+    private static String getMealWithLeastCalories(VeganMeal[] veganMeals,
+                                                   VegetarianMeal[] vegetarianMeals,
+                                                   MeatMeal[] meatMeals) {
+        BigDecimal lowestCalorie = BigDecimal.ZERO;
+        String lowestCalorieMealData = "";
+
+        for (VeganMeal veganMeal : veganMeals) {
+            lowestCalorieMealData = "Ime: " + veganMeal.getName() + ", kategorija:  " + veganMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (VegetarianMeal vegetarianMeal : vegetarianMeals) {
+            lowestCalorieMealData = "Ime: " + vegetarianMeal.getName() + ", kategorija:  " + vegetarianMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (MeatMeal meatMeal : meatMeals) {
+            lowestCalorieMealData = "Ime: " + meatMeal.getName() + ", kategorija:  " + meatMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        return lowestCalorieMealData;
     }
 }

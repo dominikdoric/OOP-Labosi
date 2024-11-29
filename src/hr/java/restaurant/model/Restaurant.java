@@ -68,4 +68,9 @@ public class Restaurant extends Entity {
     public void setDeliverers(Deliverer[] deliverers) {
         this.deliverers = deliverers;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
