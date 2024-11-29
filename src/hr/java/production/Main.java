@@ -20,6 +20,9 @@ public class Main {
     static final int NUMBER_OF_DELIVERERS = 3;
     static final int NUMBER_OF_RESTAURANTS = 3;
     static final int NUMBER_OF_ORDERS = 3;
+    static final int NUMBER_OF_VEGAN_MEALS = 3;
+    static final int NUMBER_OF_VEGETARIAN_MEALS = 3;
+    static final int NUMBER_OF_MEAT_MEALS = 3;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -31,6 +34,9 @@ public class Main {
         Deliverer[] deliverers = new Deliverer[NUMBER_OF_DELIVERERS];
         Restaurant[] restaurants = new Restaurant[NUMBER_OF_RESTAURANTS];
         Order[] orders = new Order[NUMBER_OF_ORDERS];
+        VeganMeal[] veganMeals = new VeganMeal[NUMBER_OF_VEGAN_MEALS];
+        VegetarianMeal[] vegetarianMeals = new VegetarianMeal[NUMBER_OF_VEGETARIAN_MEALS];
+        MeatMeal[] meatMeals = new MeatMeal[NUMBER_OF_MEAT_MEALS];
 
         System.out.println("Molimo Vas unesite koji će sve kategorije biti u Vašim restoranima.");
         insertCategories(categories, scanner);
@@ -40,6 +46,21 @@ public class Main {
 
         System.out.println("Molimo Vas unesite koja će sve jela biti u Vašim restoranima.");
         insertMeals(meals, ingredients, categories, scanner);
+
+        System.out.println("Molimo Vas unesite koja će sve veganska jela biti u Vašim restoranima.");
+        insertVeganMeals(scanner, veganMeals, categories, ingredients);
+
+        System.out.println("Molimo Vas unesite koja će sve vegetarijanska jela biti u Vašim restoranima.");
+        insertVegetarianMeals(scanner, vegetarianMeals, categories, ingredients);
+
+        System.out.println("Molimo Vas unesite koja će sve mesna jela biti u Vašim restoranima.");
+        insertMeatMeals(scanner, meatMeals, categories, ingredients);
+
+        System.out.println("Ovo je jelo koje ima najveći broj kilokalorija: ");
+        System.out.println(getMealWithMostCalories(veganMeals, vegetarianMeals, meatMeals));
+
+        System.out.println("Ovo je jelo koje ima najmanji broj kilokalorija: ");
+        System.out.println(getMealWithLeastCalories(veganMeals, vegetarianMeals, meatMeals));
 
         System.out.println("Molimo Vas unesite 3 kuhara koji će raditi.");
         insertChefs(chefs, scanner);
@@ -148,6 +169,140 @@ public class Main {
             }
 
             meals[i] = new Meal((long) i, mealName, choosenCategory, chosenIngredients, mealPrice);
+        }
+    }
+
+    private static void insertVeganMeals(Scanner scanner,
+                                         VeganMeal[] veganMeals,
+                                         Category[] categories,
+                                         Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_VEGAN_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite koliko različitih vrsta salata ide u " + (i + 1) + ". vegansko jelo: ");
+            int numberOfSalads = scanner.nextInt();
+
+            veganMeals[i] = new VeganMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, numberOfSalads);
+        }
+    }
+
+    private static void insertVegetarianMeals(Scanner scanner,
+                                              VegetarianMeal[] vegetarianMeals,
+                                              Category[] categories,
+                                              Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_VEGETARIAN_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite sadrži li " + (i + 1) + ". vegansko jelo jaja. Unesite broj pokraj točnog odgovora.");
+            System.out.println("1. Ovo jelo SADRŽI jaja.");
+            System.out.println("2. Ovo jelo NE SADRŽI jaja.");
+            boolean containsEggs = doesVegetarianMealContainsEggs(scanner);
+
+            vegetarianMeals[i] = new VegetarianMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, containsEggs);
+        }
+    }
+
+    private static void insertMeatMeals(Scanner scanner,
+                                        MeatMeal[] meatMeals,
+                                        Category[] categories,
+                                        Ingredient[] ingredients) {
+        for (int i = 0; i < NUMBER_OF_MEAT_MEALS; i++) {
+            System.out.println("Molimo unesite ime " + (i + 1) + ". veganskog jela: ");
+            String veganMealName = scanner.nextLine();
+
+            System.out.println("Molimo unesite kojoj kategoriji " + (i + 1) + " jelo pripada: ");
+            System.out.println("Ovo su sve kategorije: ");
+            for (int j = 0; j < categories.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
+            }
+            scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
+            String categoryName = scanner.nextLine();
+            Category choosenCategory = findCategoryByName(categories, categoryName);
+
+            System.out.println("Molimo unesite koji sve sastojci idu u ovo jelo: ");
+            System.out.println("Ovo su svi sastojci: ");
+            for (int j = 0; j < ingredients.length; j++) {
+                System.out.print("\n\t" + (j + 1) + ". " + ingredients[j].getName() + "\n");
+            }
+            System.out.println("Koliko sastojaka želite unijeti: ");
+            int ingredientsNumber = scanner.nextInt();
+            Ingredient[] chosenIngredients = new Ingredient[ingredientsNumber];
+            for (int k = 0; k < ingredientsNumber; k++) {
+                System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
+                scanner.nextLine();
+                String ingredientName = scanner.nextLine();
+                Ingredient choosenIngredient = findIngredientByName(ingredients, ingredientName);
+                chosenIngredients[k] = choosenIngredient;
+            }
+
+            System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
+            BigDecimal mealPrice = scanner.nextBigDecimal();
+
+            System.out.println("Molimo unesite proces zamrzavanja " + (i + 1) + ". mesnog jela: ");
+            String freezingMethod = scanner.nextLine();
+
+            meatMeals[i] = new MeatMeal((i + 1L), veganMealName, choosenCategory, chosenIngredients, mealPrice, freezingMethod);
         }
     }
 
@@ -604,5 +759,60 @@ public class Main {
         }
 
         return employeeWithLongestContract;
+    }
+
+    private static boolean doesVegetarianMealContainsEggs(Scanner scanner) {
+        while (true) {
+            int input;
+            try {
+                input = Integer.parseInt(scanner.nextLine());
+                if (input == 1) return true;
+                else if (input == 2) return false;
+                else System.out.println("Pogrešan unos! Molimo unesite ili 1 ili 2.");
+            } catch (NumberFormatException exception) {
+                System.out.println("Molimo unesite valjani broj (1 ili 2).");
+            }
+        }
+    }
+
+    private static String getMealWithMostCalories(VeganMeal[] veganMeals,
+                                                  VegetarianMeal[] vegetarianMeals,
+                                                  MeatMeal[] meatMeals) {
+        BigDecimal biggestCalorie = BigDecimal.ZERO;
+        String biggestCalorieMealData = "";
+
+        for (VeganMeal veganMeal : veganMeals) {
+            biggestCalorieMealData = "Ime: " + veganMeal.getName() + ", kategorija:  " + veganMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (VegetarianMeal vegetarianMeal : vegetarianMeals) {
+            biggestCalorieMealData = "Ime: " + vegetarianMeal.getName() + ", kategorija:  " + vegetarianMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (MeatMeal meatMeal : meatMeals) {
+            biggestCalorieMealData = "Ime: " + meatMeal.getName() + ", kategorija:  " + meatMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+        return biggestCalorieMealData;
+    }
+
+    private static String getMealWithLeastCalories(VeganMeal[] veganMeals,
+                                                   VegetarianMeal[] vegetarianMeals,
+                                                   MeatMeal[] meatMeals) {
+        BigDecimal lowestCalorie = BigDecimal.ZERO;
+        String lowestCalorieMealData = "";
+
+        for (VeganMeal veganMeal : veganMeals) {
+            lowestCalorieMealData = "Ime: " + veganMeal.getName() + ", kategorija:  " + veganMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (VegetarianMeal vegetarianMeal : vegetarianMeals) {
+            lowestCalorieMealData = "Ime: " + vegetarianMeal.getName() + ", kategorija:  " + vegetarianMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        for (MeatMeal meatMeal : meatMeals) {
+            lowestCalorieMealData = "Ime: " + meatMeal.getName() + ", kategorija:  " + meatMeal.getCategory().getName() + ", broj kalorija: " + 12;
+        }
+
+        return lowestCalorieMealData;
     }
 }
