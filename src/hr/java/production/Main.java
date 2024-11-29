@@ -50,6 +50,9 @@ public class Main {
         System.out.println("Molimo vas unesite 3 dostavljača");
         insertDeliverers(deliverers, scanner);
 
+        System.out.println(getEmployeeWithBiggestSalary(chefs, waiters, deliverers));
+        System.out.println(getEmployeeWithLongestContract(chefs, waiters, deliverers));
+
         System.out.println("Molimo vas unesite 3 Restorana");
         insertRestaurants(scanner, restaurants, meals, chefs, waiters, deliverers);
 
@@ -545,5 +548,61 @@ public class Main {
             }
         }
         return contractOption == 1 ? Contract.ContractType.FULL_TIME : Contract.ContractType.PART_TIME;
+    }
+
+    private static String getEmployeeWithBiggestSalary(Chef[] chefs, Waiter[] waiters, Deliverer[] deliverers) {
+        String employeeWithBiggestSalary = "";
+        BigDecimal maxSalary = BigDecimal.ZERO;
+
+        for (Chef chef : chefs) {
+            if (chef != null && chef.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = chef.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je kuhar " + chef.getFirstName() + " " + chef.getLastName();
+            }
+        }
+
+        for (Waiter waiter : waiters) {
+            if (waiter != null && waiter.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = waiter.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je konobar " + waiter.getFirstName() + " " + waiter.getLastName();
+            }
+        }
+
+        for (Deliverer deliverer : deliverers) {
+            if (deliverer != null && deliverer.getContract().getSalary().compareTo(maxSalary) > 0) {
+                maxSalary = deliverer.getContract().getSalary();
+                employeeWithBiggestSalary = "Zaposlenik s najvećom plaćom je dostavljač " + deliverer.getFirstName() + " " + deliverer.getLastName();
+            }
+        }
+
+        return employeeWithBiggestSalary;
+    }
+
+    private static String getEmployeeWithLongestContract(Chef[] chefs, Waiter[] waiters, Deliverer[] deliverers) {
+        String employeeWithLongestContract = "";
+        LocalDate longestContract = LocalDate.now();
+
+        for (Chef chef : chefs) {
+            if (chef != null && chef.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = chef.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je kuhar " + chef.getFirstName() + " " + chef.getLastName();
+            }
+        }
+
+        for (Waiter waiter : waiters) {
+            if (waiter != null && waiter.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = waiter.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je konobar " + waiter.getFirstName() + " " + waiter.getLastName();
+            }
+        }
+
+        for (Deliverer deliverer : deliverers) {
+            if (deliverer != null && deliverer.getContract().getStartDate().isBefore(longestContract)) {
+                longestContract = deliverer.getContract().getStartDate();
+                employeeWithLongestContract = "Zaposlenik s najdužim stažem je dostavljač " + deliverer.getFirstName() + " " + deliverer.getLastName();
+            }
+        }
+
+        return employeeWithLongestContract;
     }
 }

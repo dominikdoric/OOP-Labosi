@@ -9,4 +9,20 @@ public class Waiter extends Person {
         this.contract = contract;
         this.bonus = bonus;
     }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public Bonus getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(Bonus bonus) {
+        this.bonus = bonus;
+    }
 }
