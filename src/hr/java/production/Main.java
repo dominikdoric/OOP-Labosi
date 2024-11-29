@@ -4,6 +4,8 @@ import hr.java.restaurant.enumeration.ContractType;
 import hr.java.restaurant.exception.EntityAlreadyInsertedException;
 import hr.java.restaurant.exception.NumberNotCorrectException;
 import hr.java.restaurant.model.*;
+import hr.java.restaurant.sort.EmployeesByContractLenghtSorter;
+import hr.java.restaurant.sort.EmployeesBySalarySorter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -79,6 +81,12 @@ public class Main {
 
         System.out.println("Molimo vas unesite 3 dostavljača");
         insertDeliverers(deliverers, scanner);
+
+        System.out.println("Ovo je raspored svih zaposlenih po iznosu plaće or najveće prema najmanjoj: ");
+        sortEmployeesBySalary(chefs, waiters, deliverers);
+
+        System.out.println("Ovo je raspored svih zaposlenih po broju dana u restoranu: ");
+        sortEmployeesByDaysWorking(chefs, waiters, deliverers);
 
         System.out.println(getEmployeeWithBiggestSalary(chefs, waiters, deliverers));
         System.out.println(getEmployeeWithLongestContract(chefs, waiters, deliverers));
@@ -178,7 +186,7 @@ public class Main {
             System.out.println("Ovo su sve kategorije: ");
             List<Category> categoryList = new ArrayList<>(categories);
             for (int j = 0; j < categories.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(j).getName() + "\n");
             }
 
             System.out.println("Ovdje upišite kojoj kategoriji pripada ovaj sastojak: ");
@@ -240,7 +248,7 @@ public class Main {
             System.out.println("Ovo su sve kategorije: ");
             List<Category> categoryList = new ArrayList<>(categories);
             for (int j = 0; j < categories.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(j).getName() + "\n");
             }
             scanner.nextLine();
             System.out.println("Ovdje unesite kategoriju jela: ");
@@ -251,7 +259,7 @@ public class Main {
             System.out.println("Ovo su svi sastojci: ");
             List<Ingredient> ingredientList = new ArrayList<>(ingredients);
             for (int j = 0; j < ingredients.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(j).getName() + "\n");
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
@@ -289,7 +297,7 @@ public class Main {
             System.out.println("Ovo su sve kategorije: ");
             List<Category> categoryList = new ArrayList<>(categories);
             for (int j = 0; j < categories.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(j).getName() + "\n");
             }
             scanner.nextLine();
             System.out.println("Ovdje unesite kategoriju jela: ");
@@ -300,7 +308,7 @@ public class Main {
             System.out.println("Ovo su svi sastojci: ");
             List<Ingredient> ingredientList = new ArrayList<>(ingredients);
             for (int j = 0; j < ingredients.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(j).getName() + "\n");
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
@@ -345,7 +353,7 @@ public class Main {
             System.out.println("Ovo su sve kategorije: ");
             List<Category> categoryList = new ArrayList<>(categories);
             for (int j = 0; j < categories.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(j).getName() + "\n");
             }
             scanner.nextLine();
             System.out.println("Ovdje unesite kategoriju jela: ");
@@ -356,7 +364,7 @@ public class Main {
             System.out.println("Ovo su svi sastojci: ");
             List<Ingredient> ingredientList = new ArrayList<>(ingredients);
             for (int j = 0; j < ingredients.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(j).getName() + "\n");
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
@@ -402,7 +410,7 @@ public class Main {
             System.out.println("Ovo su sve kategorije: ");
             List<Category> categoryList = new ArrayList<>(categories);
             for (int j = 0; j < categories.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + categoryList.get(j).getName() + "\n");
             }
             scanner.nextLine();
             System.out.println("Ovdje unesite kategoriju jela: ");
@@ -413,7 +421,7 @@ public class Main {
             System.out.println("Ovo su svi sastojci: ");
             List<Ingredient> ingredientList = new ArrayList<>(ingredients);
             for (int j = 0; j < ingredients.size(); j++) {
-                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(i).getName() + "\n");
+                System.out.print("\n\t" + (j + 1) + ". " + ingredientList.get(j).getName() + "\n");
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
@@ -696,7 +704,7 @@ public class Main {
             System.out.println("Ovo su sva moguća jela:");
             List<Meal> mealList = new ArrayList<>(meals);
             for (int j = 0; j < meals.size(); j++) {
-                String mealName = mealList.get(i).getName();
+                String mealName = mealList.get(j).getName();
                 System.out.println("1. " + mealName);
             }
 
@@ -709,7 +717,7 @@ public class Main {
             System.out.println("Ovo su svi mogući kuhari: ");
             List<Chef> chefList = new ArrayList<>(chefs);
             for (int j = 0; j < chefs.size(); j++) {
-                String chefName = chefList.get(i).getFirstName();
+                String chefName = chefList.get(j).getFirstName();
                 System.out.println("1. " + chefName);
             }
 
@@ -722,7 +730,7 @@ public class Main {
             System.out.println("Ovo su svi mogući konobari: ");
             List<Waiter> waiterList = new ArrayList<>(waiters);
             for (int j = 0; j < waiters.size(); j++) {
-                String waiterName = waiterList.get(i).getFirstName();
+                String waiterName = waiterList.get(j).getFirstName();
                 System.out.println("1. " + waiterName);
             }
 
@@ -735,7 +743,7 @@ public class Main {
             System.out.println("Ovo su svi mogući dostavljači: ");
             List<Deliverer> delivererList = new ArrayList<>(deliverers);
             for (int j = 0; j < deliverers.size(); j++) {
-                System.out.println("1. " + delivererList.get(i).getFirstName());
+                System.out.println("1. " + delivererList.get(j).getFirstName());
             }
 
             String delivererName = scanner.nextLine();
@@ -774,7 +782,7 @@ public class Main {
             System.out.println("Iz kojeg restorana želite naručiti " + (i + 1) + ". naruđbu?");
             List<Restaurant> restaurantList = new ArrayList<>(restaurants);
             for (int j = 0; j < restaurants.size(); j++) {
-                System.out.println("1. " + restaurantList.get(i).getName());
+                System.out.println("1. " + restaurantList.get(j).getName());
             }
             String restaurantName = scanner.nextLine();
             Restaurant chosenRestaurant = findRestaurantByName(restaurants, restaurantName);
@@ -783,7 +791,7 @@ public class Main {
             System.out.println("Ovo su sva jela: ");
             List<Meal> mealList = new ArrayList<>(meals);
             for (int k = 0; k < meals.size(); k++) {
-                System.out.println("1. " + mealList.get(i).getName());
+                System.out.println("1. " + mealList.get(k).getName());
             }
             String mealName = scanner.nextLine();
             Meal chosenMeal = findMealByName(meals, mealName);
@@ -794,7 +802,7 @@ public class Main {
             System.out.println("Ovo su dostupni dostavljači: ");
             List<Deliverer> delivererList = new ArrayList<>(deliverers);
             for (int h = 0; h < deliverers.size(); h++) {
-                System.out.println("1. " + delivererList.get(i).getFirstName());
+                System.out.println("1. " + delivererList.get(h).getFirstName());
             }
             String delivererName = scanner.nextLine();
             Deliverer chosenDeliverer = findDelivererByName(deliverers, delivererName);
@@ -1319,5 +1327,41 @@ public class Main {
         }
 
         return lowestCalorieMealData;
+    }
+
+    /**
+     * Prints employees and their salaries sorted ascending by salary value.
+     *
+     * @param chefs      All chefs that are working in the restaurant.
+     * @param waiters    All waiters that are working in the restaurant.
+     * @param deliverers All deliverers that are working in the restaurant.
+     */
+    private static void sortEmployeesBySalary(Set<Chef> chefs, Set<Waiter> waiters, Set<Deliverer> deliverers) {
+        List<Object> employees = new ArrayList<>();
+
+        employees.add(chefs);
+        employees.add(waiters);
+        employees.add(deliverers);
+        employees.sort(new EmployeesBySalarySorter());
+
+        employees.forEach(System.out::println);
+    }
+
+    /**
+     * Prints employees and their working days ascending based on days working in restaurant.
+     *
+     * @param chefs      All chefs that are working in the restaurant.
+     * @param waiters    All waiters that are working in the restaurant.
+     * @param deliverers All deliverers that are working in the restaurant.
+     */
+    private static void sortEmployeesByDaysWorking(Set<Chef> chefs, Set<Waiter> waiters, Set<Deliverer> deliverers) {
+        List<Object> employees = new ArrayList<>();
+
+        employees.add(chefs);
+        employees.add(waiters);
+        employees.add(deliverers);
+        employees.sort(new EmployeesByContractLenghtSorter());
+
+        employees.forEach(System.out::println);
     }
 }
