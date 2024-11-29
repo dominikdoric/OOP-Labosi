@@ -1,5 +1,6 @@
 package hr.java.production;
 
+import hr.java.restaurant.exception.EntityAlreadyInsertedException;
 import hr.java.restaurant.exception.NumberNotCorrectException;
 import hr.java.restaurant.model.*;
 
@@ -63,13 +64,24 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which categories will be available
      * in the restaurant and after inserting them displaying them to users.
+     *
      * @param categories Categories field with default size which allows us to iterate through its size and store value.
-     * @param scanner Object which allows users to insert values through console.
+     * @param scanner    Object which allows users to insert values through console.
      */
     private static void insertCategories(Category[] categories, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " kategorije: ");
-            String categoryName = scanner.nextLine();
+            String categoryName = "";
+            boolean isInputValid = false;
+            while (!isInputValid) {
+                try {
+                    categoryName = scanner.nextLine();
+                    if (i > 0) processInputtedCategoryEntities(categories, categoryName);
+                    isInputValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite opis " + (i + 1) + " kategorije: ");
             String categoryDescription = scanner.nextLine();
@@ -88,9 +100,10 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which ingredients will be available
      * in the restaurant and after inserting them displaying them to users.
+     *
      * @param ingredients Ingredients field with default size to iterate through it.
-     * @param categories Categories field with default size to iterate through it.
-     * @param scanner Object which allows users to insert values through console.
+     * @param categories  Categories field with default size to iterate through it.
+     * @param scanner     Object which allows users to insert values through console.
      */
     private static void insertIngredients(Ingredient[] ingredients,
                                           Category[] categories,
@@ -98,7 +111,17 @@ public class Main {
 
         for (int i = 0; i < NUMBER_OF_INGREDIENTS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
-            String ingredientName = scanner.nextLine();
+            String ingredientName = "";
+            boolean isNameInputValid = false;
+            while (!isNameInputValid) {
+                try {
+                    ingredientName = scanner.nextLine();
+                    if (i > 0) processInputtedIngredientEntities(ingredients, ingredientName);
+                    isNameInputValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite koliko kalorija ima " + (i + 1) + " sastojak: ");
             BigDecimal kcal = BigDecimal.ZERO;
@@ -143,10 +166,11 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which categories will be available
      * in the restaurant and after inserting them displaying them to users.
-     * @param meals Meals field with default size to iterate through it.
+     *
+     * @param meals       Meals field with default size to iterate through it.
      * @param ingredients Ingredients field with default size to iterate through it.
-     * @param categories Categories field with default size to iterate through it.
-     * @param scanner Object which allows users to insert values through console.
+     * @param categories  Categories field with default size to iterate through it.
+     * @param scanner     Object which allows users to insert values through console.
      */
     private static void insertMeals(Meal[] meals,
                                     Ingredient[] ingredients,
@@ -154,7 +178,17 @@ public class Main {
                                     Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_MEALS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + " jela: ");
-            String mealName = scanner.nextLine();
+            String mealName = "";
+            boolean isInputNameValid = false;
+            while (!isInputNameValid) {
+                try {
+                    mealName = scanner.nextLine();
+                    if (i > 0) processInputtedMealEntities(meals, mealName);
+                    isInputNameValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite cijenu " + (i + 1) + " jela: ");
             BigDecimal mealPrice = BigDecimal.ZERO;
@@ -208,19 +242,30 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which chefs will be available
      * in the restaurant and after inserting them displaying them to users.
-     * @param chefs Chefs field with default size to iterate through it.
+     *
+     * @param chefs   Chefs field with default size to iterate through it.
      * @param scanner Object which allows users to insert values through console.
      */
     private static void insertChefs(Chef[] chefs, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_CHEFS; i++) {
-            System.out.println("Molimo unesite ime " + (i + 1) + ". kuhara:");
-            String chefFirstName = scanner.nextLine();
+            String chefFirstName = "";
+            String chefLastName = "";
+            boolean isChefNameValid = false;
+            while (!isChefNameValid) {
+                try {
+                    System.out.println("Molimo unesite ime " + (i + 1) + ". kuhara:");
+                    chefFirstName = scanner.nextLine();
 
-            System.out.println("Molimo unesite prezime " + (i + 1) + ". kuhara:");
-            String chefLastName = scanner.nextLine();
+                    System.out.println("Molimo unesite prezime " + (i + 1) + ". kuhara:");
+                    chefLastName = scanner.nextLine();
+                    if (i > 0) processInputtedChefName(chefs, chefFirstName, chefLastName);
+                    isChefNameValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". kuhara:");
-
             BigDecimal chefSalary = BigDecimal.ZERO;
             boolean isInputValid = false;
             while (!isInputValid) {
@@ -252,16 +297,29 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which waiters will be available
      * in the restaurant and after inserting them displaying them to users.
+     *
      * @param waiters Waiters field with default size to iterate through it.
      * @param scanner Object which allows users to insert values through console.
      */
     private static void insertWaiters(Waiter[] waiters, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_WAITERS; i++) {
-            System.out.println("Molimo unesite ime " + (i + 1) + ". konobara:");
-            String waiterFirstName = scanner.nextLine();
+            String waiterFirstName = "";
+            String waiterLastName = "";
+            boolean isInputNameValid = false;
+            while (!isInputNameValid) {
+                try {
+                    System.out.println("Molimo unesite ime " + (i + 1) + ". konobara:");
+                    waiterFirstName = scanner.nextLine();
 
-            System.out.println("Molimo unesite prezime " + (i + 1) + ". konobara:");
-            String waiterLastName = scanner.nextLine();
+                    System.out.println("Molimo unesite prezime " + (i + 1) + ". konobara:");
+                    waiterLastName = scanner.nextLine();
+
+                    if (i > 0) processInputtedWaiterName(waiters, waiterFirstName, waiterLastName);
+                    isInputNameValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". konobara:");
             BigDecimal waiterSalary = BigDecimal.ZERO;
@@ -295,16 +353,30 @@ public class Main {
     /**
      * Function which contains logic for asking user to insert which deliverers will be available
      * in the restaurant and after inserting them displaying them to users.
+     *
      * @param deliverers Deliverers field with default size to iterate through it.
-     * @param scanner Object which allows users to insert values through console.
+     * @param scanner    Object which allows users to insert values through console.
      */
     private static void insertDeliverers(Deliverer[] deliverers, Scanner scanner) {
         for (int i = 0; i < NUMBER_OF_DELIVERERS; i++) {
-            System.out.println("Molimo unesite ime " + (i + 1) + ". dostavljača:");
-            String delivererFirstName = scanner.nextLine();
+            String delivererFirstName = "";
+            String delivererLastName = "";
+            boolean isInputNameValid = false;
 
-            System.out.println("Molimo unesite prezime " + (i + 1) + ". dostavljača:");
-            String delivererLastName = scanner.nextLine();
+            while (!isInputNameValid) {
+                try {
+                    System.out.println("Molimo unesite ime " + (i + 1) + ". dostavljača:");
+                    delivererFirstName = scanner.nextLine();
+
+                    System.out.println("Molimo unesite prezime " + (i + 1) + ". dostavljača:");
+                    delivererLastName = scanner.nextLine();
+
+                    if (i > 0) processInputtedDelivererName(deliverers, delivererFirstName, delivererLastName);
+                    isInputNameValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite plaću " + (i + 1) + ". dostavljača:");
             BigDecimal delivererSalary = BigDecimal.ZERO;
@@ -337,12 +409,13 @@ public class Main {
 
     /**
      * Function which is used for inserting data about specific restaurant.
-     * @param scanner Object which allows users to insert values through console.
+     *
+     * @param scanner     Object which allows users to insert values through console.
      * @param restaurants Restaurants field with default size to iterate through it.
-     * @param meals Meals field with default size to iterate through it.
-     * @param chefs Chefs field with default size to iterate through it.
-     * @param waiters Waiters field with default size to iterate through it.
-     * @param deliverers Deliverers field with default size to iterate through it.
+     * @param meals       Meals field with default size to iterate through it.
+     * @param chefs       Chefs field with default size to iterate through it.
+     * @param waiters     Waiters field with default size to iterate through it.
+     * @param deliverers  Deliverers field with default size to iterate through it.
      */
     private static void insertRestaurants(Scanner scanner,
                                           Restaurant[] restaurants,
@@ -353,7 +426,18 @@ public class Main {
     ) {
         for (int i = 0; i < NUMBER_OF_RESTAURANTS; i++) {
             System.out.println("Molimo unesite ime " + (i + 1) + ". restorana: ");
-            String restaurantName = scanner.nextLine();
+            String restaurantName = "";
+            boolean isInputNameValid = false;
+
+            while (!isInputNameValid) {
+                try {
+                    restaurantName = scanner.nextLine();
+                    if (i > 0) processInputtedRestaurantEntities(restaurants, restaurantName);
+                    isInputNameValid = true;
+                } catch (EntityAlreadyInsertedException exception) {
+                    System.out.println(exception.getMessage());
+                }
+            }
 
             System.out.println("Molimo unesite ulicu " + (i + 1) + ". restorana: ");
             String streetName = scanner.nextLine();
@@ -429,11 +513,12 @@ public class Main {
 
     /**
      * Function which is used for inserting data about specific order.
-     * @param scanner Object which allows users to insert value through console.
-     * @param orders Orders field with default size to iterate through it.
+     *
+     * @param scanner     Object which allows users to insert value through console.
+     * @param orders      Orders field with default size to iterate through it.
      * @param restaurants Restaurants field with default size to iterate through it.
-     * @param meals Meals field with default size to iterate through it.
-     * @param deliverers Deliverers field with default size to iterate through it.
+     * @param meals       Meals field with default size to iterate through it.
+     * @param deliverers  Deliverers field with default size to iterate through it.
      */
     private static void insertOrders(Scanner scanner,
                                      Order[] orders,
@@ -511,6 +596,7 @@ public class Main {
     /**
      * Finds specific meal from meals list by iterating through meals list elements and
      * returns meal which mealLame corresponds to mealLame passed as a parameter.
+     *
      * @param meals    List of all available meals in restaurant.
      * @param mealLame Name which we want to find in the list.
      * @return Meal which mealLame matches to mealLame in the parameter.
@@ -602,6 +688,114 @@ public class Main {
     private static void processNumberInput(int input) throws NumberNotCorrectException {
         if (input <= 0) {
             throw new NumberNotCorrectException("Broj koji ste unijeli je 0 ili je manji od 0.");
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param categoryName Input string of specific entity.
+     * @param categories   Field which contains all categories which user already inserted.
+     * @throws EntityAlreadyInsertedException If entity has already been inserted.
+     */
+    private static void processInputtedCategoryEntities(Category[] categories, String categoryName) throws EntityAlreadyInsertedException {
+        for (Category category : categories) {
+            if (category != null && category.getName().equals(categoryName)) {
+                throw new EntityAlreadyInsertedException("Kategorija sa imenom '" + categoryName + "' već postoji. Molimo unesite kategoriju sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param categoryName Input string of specific entity.
+     * @param ingredients  Field which contains all ingredients which user already inserted.
+     * @throws EntityAlreadyInsertedException If entity has already been inserted.
+     */
+    private static void processInputtedIngredientEntities(Ingredient[] ingredients, String categoryName) throws EntityAlreadyInsertedException {
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient != null && ingredient.getName().equals(categoryName)) {
+                throw new EntityAlreadyInsertedException("Sastojak sa imenom '" + categoryName + "' već postoji. Molimo unesite sastojak sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param meals    Field which contains all meals which user already inserted.
+     * @param mealName Input string of specific entity.
+     * @throws EntityAlreadyInsertedException If entity has already been inserted.
+     */
+    private static void processInputtedMealEntities(Meal[] meals, String mealName) throws EntityAlreadyInsertedException {
+        for (Meal meal : meals) {
+            if (meal != null && meal.getName().equals(mealName)) {
+                throw new EntityAlreadyInsertedException("Sastojak sa imenom '" + mealName + "' već postoji. Molimo unesite sastojak sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param chefs     Field which contains all chefs which user has already inserted.
+     * @param firstName First name of chef which user inserted.
+     * @param lastName  Last name of chef which user inserted.
+     * @throws EntityAlreadyInsertedException If entity with that first name and last name is already inserted.
+     */
+    private static void processInputtedChefName(Chef[] chefs, String firstName, String lastName) throws EntityAlreadyInsertedException {
+        for (Chef chef : chefs) {
+            if (chef != null && chef.getFirstName().equals(firstName) && chef.getLastName().equals(lastName)) {
+                throw new EntityAlreadyInsertedException("Kuhar sa imenom " + firstName + " " + lastName + " već postoji. Molimo unesite kuhara sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param waiters   Field which contains all waiters which user has already inserted.
+     * @param firstName First name of waiter which user inserted.
+     * @param lastName  Last name of waiter which user inserted.
+     * @throws EntityAlreadyInsertedException If entity with that first name and last name is already inserted.
+     */
+    private static void processInputtedWaiterName(Waiter[] waiters, String firstName, String lastName) throws EntityAlreadyInsertedException {
+        for (Waiter waiter : waiters) {
+            if (waiter != null && waiter.getFirstName().equals(firstName) && waiter.getLastName().equals(lastName)) {
+                throw new EntityAlreadyInsertedException("Kuhar sa imenom " + firstName + " " + lastName + " već postoji. Molimo unesite kuhara sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param deliverers Field which contains all deliverers which user has already inserted.
+     * @param firstName  First name of deliverers which user inserted.
+     * @param lastName   Last name of deliverers which user inserted.
+     * @throws EntityAlreadyInsertedException If entity with that first name and last name is already inserted.
+     */
+    private static void processInputtedDelivererName(Deliverer[] deliverers, String firstName, String lastName) throws EntityAlreadyInsertedException {
+        for (Deliverer deliverer : deliverers) {
+            if (deliverer != null && deliverer.getFirstName().equals(firstName) && deliverer.getLastName().equals(lastName)) {
+                throw new EntityAlreadyInsertedException("Kuhar sa imenom " + firstName + " " + lastName + " već postoji. Molimo unesite kuhara sa drugim imenom.");
+            }
+        }
+    }
+
+    /**
+     * Function which checks if entity which user is inserting has already been inserted.
+     *
+     * @param restaurants    Field which contains all restaurants which user has already inserted.
+     * @param restaurantName Name of restaurant which user already inserted.
+     * @throws EntityAlreadyInsertedException If entity with that first name and last name is already inserted.
+     */
+    private static void processInputtedRestaurantEntities(Restaurant[] restaurants, String restaurantName) throws EntityAlreadyInsertedException {
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant != null && restaurant.getName().equals(restaurantName)) {
+                throw new EntityAlreadyInsertedException("Restoran sa imenom " + restaurantName + " već postoji. Molimo unesite kuhara sa drugim imenom.");
+            }
         }
     }
 }
