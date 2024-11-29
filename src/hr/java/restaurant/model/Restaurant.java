@@ -64,4 +64,9 @@ public class Restaurant {
     public void setDeliverers(Deliverer[] deliverers) {
         this.deliverers = deliverers;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -4,6 +4,9 @@ import hr.java.restaurant.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -51,6 +54,8 @@ public class Main {
         System.out.println("Molimo vas unesite naruđbu");
         insertOrders(scanner, orders, restaurants, meals, deliverers);
 
+        System.out.println("Restoran sa najskupljom naruđbom je: " + Arrays.toString(findRestaurantsWithBiggestOrder(orders)));
+        System.out.println("Dostavljač s najviše dostava je: " + Arrays.toString(findDelivererWithMostDeliveries(orders)));
     }
 
     private static void insertCategories(Category[] categories, Scanner scanner) {
@@ -92,10 +97,10 @@ public class Main {
                 System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
             }
 
+            System.out.println("Ovdje upišite kojoj kategoriji pripada ovaj sastojak: ");
             String categoryName = scanner.nextLine();
             Category choosenCategory = findCategoryByName(categories, categoryName);
             System.out.println("Ime odabrane kategorije: " + choosenCategory.getName());
-            System.out.println("Opis odabrane kategorije: " + choosenCategory.getDescription());
 
             ingredients[i] = new Ingredient(ingredientName, new Category(choosenCategory.getName(), choosenCategory.getDescription()), kcal, preparationMethod);
         }
@@ -118,6 +123,7 @@ public class Main {
                 System.out.print("\n\t" + (j + 1) + ". " + categories[j].getName() + "\n");
             }
             scanner.nextLine();
+            System.out.println("Ovdje unesite kategoriju jela: ");
             String categoryName = scanner.nextLine();
             Category choosenCategory = findCategoryByName(categories, categoryName);
 
@@ -230,7 +236,7 @@ public class Main {
             System.out.println("Molimo unesite ime grada u kojem se nalazi " + (i + 1) + ". restoran: ");
             String cityName = scanner.nextLine();
 
-            System.out.println("Molimo unesite poštanski broj: " + (i + 1) + ". restorana: ");
+            System.out.println("Molimo unesite poštanski broj " + (i + 1) + ". restorana: ");
             String postalCode = scanner.nextLine();
 
             Address address = new Address(streetName, houseNumber, cityName, postalCode);
@@ -238,8 +244,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koje će jelo biti u Vašem " + (i + 1) + ". restoranu:");
             System.out.println("Ovo su sva moguća jela:");
             for (int j = 0; j < meals.length; j++) {
-                String mealName = meals[i].getName();
-                System.out.println("1. " + mealName);
+                String mealName = meals[j].getName();
+                System.out.println((j + 1) + ". " + mealName);
             }
 
             String mealName = scanner.nextLine();
@@ -250,8 +256,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koji kuhar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući kuhari: ");
             for (int j = 0; j < chefs.length; j++) {
-                String chefName = chefs[i].getFirstName();
-                System.out.println("1. " + chefName);
+                String chefName = chefs[j].getFirstName();
+                System.out.println((j + 1) + ". " + chefName);
             }
 
             String chefName = scanner.nextLine();
@@ -262,8 +268,8 @@ public class Main {
             System.out.println("Molimo Vas unesite koji konobar će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući konobari: ");
             for (int j = 0; j < waiters.length; j++) {
-                String waiterName = waiters[i].getFirstName();
-                System.out.println("1. " + waiterName);
+                String waiterName = waiters[j].getFirstName();
+                System.out.println((j + 1) + ". " + waiterName);
             }
 
             String waiterName = scanner.nextLine();
@@ -274,7 +280,7 @@ public class Main {
             System.out.println("Molimo Vas unesite koji dostavljač će raditi u Vašem " + (i + 1) + ". restoranu");
             System.out.println("Ovo su svi mogući dostavljači: ");
             for (int j = 0; j < deliverers.length; j++) {
-                System.out.println("1. " + deliverers[i].getFirstName());
+                System.out.println((j + 1) + ". " + deliverers[j].getFirstName());
             }
 
             String delivererName = scanner.nextLine();
@@ -297,11 +303,11 @@ public class Main {
                                      Meal[] meals,
                                      Deliverer[] deliverers) {
 
-        System.out.println("Ovjde možete napraviti svoju naruđbu: ");
+        System.out.println("Ovdjee možete napraviti svoju naruđbu: ");
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             System.out.println("Iz kojeg restorana želite naručiti " + (i + 1) + ". naruđbu?");
             for (int j = 0; j < restaurants.length; j++) {
-                System.out.println("1. " + restaurants[j].getName());
+                System.out.println((j + 1) + ". " + restaurants[j].getName());
             }
             String restaurantName = scanner.nextLine();
             Restaurant chosenRestaurant = findRestaurantByName(restaurants, restaurantName);
@@ -391,5 +397,68 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static Restaurant[] findRestaurantsWithBiggestOrder(Order[] orders) {
+        if (orders == null || orders.length == 0) return new Restaurant[0];
+
+        BigDecimal highestPrice = BigDecimal.ZERO;
+        Restaurant[] result = new Restaurant[orders.length];
+        int count = 0;
+
+        for (Order order : orders) {
+            if (order != null && order.getMeals() != null) {
+                for (Meal meal : order.getMeals()) {
+                    if (meal != null) {
+                        int comparison = meal.getPrice().compareTo(highestPrice);
+                        if (comparison > 0) {
+                            highestPrice = meal.getPrice();
+                            result = new Restaurant[orders.length];
+                            result[0] = order.getRestaurant();
+                            count = 1;
+                        } else if (comparison == 0) {
+                            result[count++] = order.getRestaurant();
+                        }
+                    }
+                }
+            }
+        }
+
+        Restaurant[] finalResult = new Restaurant[count];
+        System.arraycopy(result, 0, finalResult, 0, count);
+        return finalResult;
+    }
+
+    private static Deliverer[] findDelivererWithMostDeliveries(Order[] orders) {
+        if (orders == null || orders.length == 0) {
+            return new Deliverer[0];
+        }
+
+        List<Deliverer> deliverers = new ArrayList<>();
+        List<Integer> deliveryCounts = new ArrayList<>();
+
+        for (Order order : orders) {
+            if (order != null && order.getDeliverer() != null) {
+                Deliverer deliverer = order.getDeliverer();
+                int index = deliverers.indexOf(deliverer);
+                if (index == -1) {
+                    deliverers.add(deliverer);
+                    deliveryCounts.add(1);
+                } else {
+                    deliveryCounts.set(index, deliveryCounts.get(index) + 1);
+                }
+            }
+        }
+
+        int maxDeliveries = deliveryCounts.stream().max(Integer::compare).orElse(0);
+
+        List<Deliverer> topDeliverers = new ArrayList<>();
+        for (int i = 0; i < deliverers.size(); i++) {
+            if (deliveryCounts.get(i) == maxDeliveries) {
+                topDeliverers.add(deliverers.get(i));
+            }
+        }
+
+        return topDeliverers.toArray(new Deliverer[0]);
     }
 }
