@@ -1,0 +1,20 @@
+1
+Tjestenina
+1
+745.0
+Dobije se iz žitarica
+2
+Brancin
+2
+175.0
+Morski plod
+3
+Mljeveno meso
+3
+745.0
+Dobije se iz životinjskog podrijetla
+4
+Krumipiri
+2
+123.0
+Dobije se sadnjom

@@ -7,8 +7,8 @@ public class Chef extends Person {
     private Contract contract;
     private Bonus bonus;
 
-    public Chef(String firstName, String lastName, Contract contract, Bonus bonus) {
-        super(firstName, lastName);
+    public Chef(Integer id,String firstName, String lastName, Contract contract, Bonus bonus) {
+        super(id,firstName, lastName);
         this.contract = contract;
         this.bonus = bonus;
     }

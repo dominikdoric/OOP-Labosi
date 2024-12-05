@@ -7,8 +7,8 @@ public class Deliverer extends Person {
     private Contract contract;
     private Bonus bonus;
 
-    public Deliverer(String firstName, String lastName, Contract contract, Bonus bonus) {
-        super(firstName, lastName);
+    public Deliverer(Integer id, String firstName, String lastName, Contract contract, Bonus bonus) {
+        super(id, firstName, lastName);
         this.contract = contract;
         this.bonus = bonus;
     }

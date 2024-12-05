@@ -9,16 +9,26 @@ import java.time.LocalDate;
  * Represents data about contract for each employee.
  */
 public class Contract {
-    BigDecimal salary;
-    LocalDate startDate;
-    LocalDate endDate;
-    ContractType contractType;
+    private Integer id;
+    private BigDecimal salary;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private ContractType contractType;
 
-    public Contract(BigDecimal salary, LocalDate startDate, LocalDate endDate, ContractType contractType) {
+    public Contract(Integer id, BigDecimal salary, LocalDate startDate, LocalDate endDate, ContractType contractType) {
+        this.id = id;
         this.salary = salary;
         this.startDate = startDate;
         this.endDate = endDate;
         this.contractType = contractType;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public BigDecimal getSalary() {

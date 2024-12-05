@@ -5,12 +5,22 @@ package hr.java.restaurant.model;
  * It handles their first name and last name.
  */
 abstract public class Person {
+    Integer id;
     String firstName;
     String lastName;
 
-    Person(String firstName, String lastName) {
+    Person(Integer id, String firstName, String lastName) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {

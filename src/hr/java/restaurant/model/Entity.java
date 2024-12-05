@@ -4,7 +4,7 @@ package hr.java.restaurant.model;
  * Represents base class which will handle id for every other class which extends this one.
  */
 abstract public class Entity {
-    Long id;
+    private Long id;
 
     Entity(Long id) {
         this.id = id;

@@ -512,10 +512,10 @@ public class Main {
             int chefBonus = scanner.nextInt();
             scanner.nextLine();
 
-            Contract contract = new Contract(chefSalary, startDate, endDate, contractType);
-            Bonus bonus = new Bonus(chefBonus);
+            Contract contract = new Contract(i, chefSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(i, chefBonus);
 
-            chefs.add(new Chef(chefFirstName, chefLastName, contract, bonus));
+            chefs.add(new Chef(i, chefFirstName, chefLastName, contract, bonus));
         }
 
         System.out.println("Ovo su kuhari koji rade u Vašim restoranima: ");
@@ -582,10 +582,10 @@ public class Main {
             int waiterBonus = scanner.nextInt();
             scanner.nextLine();
 
-            Contract contract = new Contract(waiterSalary, startDate, endDate, contractType);
-            Bonus bonus = new Bonus(waiterBonus);
+            Contract contract = new Contract(i, waiterSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(i, waiterBonus);
 
-            waiters.add(new Waiter(waiterFirstName, waiterLastName, contract, bonus));
+            waiters.add(new Waiter(i, waiterFirstName, waiterLastName, contract, bonus));
         }
 
         System.out.println("Ovo su konobari koji rade u Vašim restoranima: ");
@@ -653,10 +653,10 @@ public class Main {
             int delivererBonus = scanner.nextInt();
             scanner.nextLine();
 
-            Contract contract = new Contract(delivererSalary, startDate, endDate, contractType);
-            Bonus bonus = new Bonus(delivererBonus);
+            Contract contract = new Contract(i, delivererSalary, startDate, endDate, contractType);
+            Bonus bonus = new Bonus(i, delivererBonus);
 
-            deliverers.add(new Deliverer(delivererFirstName, delivererLastName, contract, bonus));
+            deliverers.add(new Deliverer(i, delivererFirstName, delivererLastName, contract, bonus));
         }
 
         System.out.println("Ovo su dostavljači koji rade u Vašim restoranima: ");
@@ -711,7 +711,7 @@ public class Main {
             System.out.println("Molimo unesite poštanski broj " + (i + 1) + ". restorana: ");
             String postalCode = scanner.nextLine();
 
-            Address address = new Address(streetName, houseNumber, cityName, postalCode);
+            Address address = new Address(i, streetName, houseNumber, cityName, postalCode);
 
             System.out.println("Molimo Vas unesite koje će jelo biti u Vašem " + (i + 1) + ". restoranu:");
             System.out.println("Ovo su sva moguća jela:");
