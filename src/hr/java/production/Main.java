@@ -3,6 +3,7 @@ package hr.java.production;
 import hr.java.restaurant.enumeration.ContractType;
 import hr.java.restaurant.exception.EntityAlreadyInsertedException;
 import hr.java.restaurant.exception.NumberNotCorrectException;
+import hr.java.restaurant.generics.RestaurantLabourExchangeOffice;
 import hr.java.restaurant.model.*;
 import hr.java.restaurant.sort.EmployeesByContractLenghtSorter;
 import hr.java.restaurant.sort.EmployeesBySalarySorter;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     static final int NUMBER_OF_CATEGORIES = 3;
@@ -48,6 +50,7 @@ public class Main {
         Set<VeganMeal> veganMeals = new HashSet<>(NUMBER_OF_VEGAN_MEALS);
         Set<VegetarianMeal> vegetarianMeals = new HashSet<>(NUMBER_OF_VEGETARIAN_MEALS);
         Set<MeatMeal> meatMeals = new HashSet<>(NUMBER_OF_MEAT_MEALS);
+        RestaurantLabourExchangeOffice<Restaurant> restaurantLabourExchangeOffice = new RestaurantLabourExchangeOffice<>(restaurants);
 
         System.out.println("Molimo Vas unesite koji će sve kategorije biti u Vašim restoranima.");
         insertCategories(categories, scanner);
@@ -92,13 +95,19 @@ public class Main {
         System.out.println(getEmployeeWithLongestContract(chefs, waiters, deliverers));
 
         System.out.println("Molimo vas unesite 3 Restorana");
-        insertRestaurants(scanner, restaurants, meals, chefs, waiters, deliverers);
+        insertRestaurants(scanner, restaurants, restaurantLabourExchangeOffice, meals, chefs, waiters, deliverers);
 
         System.out.println("Molimo vas unesite naruđbu");
-        insertOrders(scanner, orders, restaurants, meals, deliverers);
+        insertOrders(scanner, orders, restaurantLabourExchangeOffice, meals, deliverers);
 
         System.out.println("Restoran sa najskupljom naruđbom je: " + Arrays.toString(findRestaurantsWithBiggestOrder(orders)));
         System.out.println("Dostavljač s najviše dostava je: " + Arrays.toString(findDelivererWithMostDeliveries(orders)));
+
+        findRestaurantWithMostEmployees(restaurants);
+        findMostCommonMeal(restaurants);
+        displayIngredientsForMeals(orders);
+        displayTotalOrderPrice(orders);
+        displayRestaurantsAtAddress();
     }
 
     /**
@@ -669,6 +678,7 @@ public class Main {
      */
     private static void insertRestaurants(Scanner scanner,
                                           Set<Restaurant> restaurants,
+                                          RestaurantLabourExchangeOffice<Restaurant> restaurantLabourExchangeOffice,
                                           Set<Meal> meals,
                                           Set<Chef> chefs,
                                           Set<Waiter> waiters,
@@ -762,33 +772,35 @@ public class Main {
                     chosenChefs,
                     chosenWaiters,
                     chosenDeliverers));
+
+            restaurantLabourExchangeOffice.setRestaurants(restaurants);
         }
     }
 
     /**
      * Function which is used for inserting data about specific order.
      *
-     * @param scanner     Object which allows users to insert value through console.
-     * @param orders      Orders field with default size to iterate through it.
-     * @param restaurants Restaurants field with default size to iterate through it.
-     * @param meals       Meals field with default size to iterate through it.
-     * @param deliverers  Deliverers field with default size to iterate through it.
+     * @param scanner                        Object which allows users to insert value through console.
+     * @param orders                         Orders field with default size to iterate through it.
+     * @param restaurantLabourExchangeOffice Restaurants field with default size to iterate through it.
+     * @param meals                          Meals field with default size to iterate through it.
+     * @param deliverers                     Deliverers field with default size to iterate through it.
      */
     private static void insertOrders(Scanner scanner,
                                      Set<Order> orders,
-                                     Set<Restaurant> restaurants,
+                                     RestaurantLabourExchangeOffice<Restaurant> restaurantLabourExchangeOffice,
                                      Set<Meal> meals,
                                      Set<Deliverer> deliverers) {
 
-        System.out.println("Ovdjee možete napraviti svoju naruđbu: ");
+        System.out.println("Ovdje možete napraviti svoju naruđbu: ");
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             System.out.println("Iz kojeg restorana želite naručiti " + (i + 1) + ". naruđbu?");
-            List<Restaurant> restaurantList = new ArrayList<>(restaurants);
-            for (int j = 0; j < restaurants.size(); j++) {
-                System.out.println("1. " + restaurantList.get(j).getName());
+            List<Restaurant> restaurantList = new ArrayList<>(restaurantLabourExchangeOffice.getRestaurants());
+            for (int j = 0; j < restaurantLabourExchangeOffice.getRestaurants().size(); j++) {
+                System.out.println(j + ". " + restaurantList.get(j).getName());
             }
             String restaurantName = scanner.nextLine();
-            Restaurant chosenRestaurant = findRestaurantByName(restaurants, restaurantName);
+            Restaurant chosenRestaurant = findRestaurantByName(restaurantLabourExchangeOffice.getRestaurants(), restaurantName);
 
             System.out.println("Koje jelo želite naručiti iz " + chosenRestaurant.getName() + " restorana?");
             System.out.println("Ovo su sva jela: ");
@@ -1366,5 +1378,95 @@ public class Main {
         employees.sort(new EmployeesByContractLenghtSorter());
 
         employees.forEach(System.out::println);
+    }
+
+    /**
+     * Finds and displays in the console restaurant which has most employees.
+     *
+     * @param restaurants All the restaurants in the organisation.
+     */
+    private static void findRestaurantWithMostEmployees(Set<Restaurant> restaurants) {
+        Optional<Restaurant> maxEmployeesRestaurant = restaurants.stream()
+                .max(Comparator.comparingInt(Restaurant::getEmployeeCount));
+        maxEmployeesRestaurant.ifPresent(restaurant ->
+                System.out.println("Restoran sa najviše zaposlenika je: " + restaurant.getName() +
+                        ", a broj zaposelnika je: " + restaurant.getEmployeeCount()));
+    }
+
+
+    /**
+     * Finds and displays in the console meals which are most common in the restaurants.
+     *
+     * @param restaurants All the restaurants in the organisation.
+     */
+    private static void findMostCommonMeal(Set<Restaurant> restaurants) {
+        // Step 1: Flatten all meals into a stream and count occurrences using a map
+        Map<Meal, Long> mealCountMap = restaurants.stream()
+                .flatMap(restaurant -> restaurant.getMeals().stream()) // Combine all meals into one stream
+                .collect(Collectors.groupingBy(meal -> meal, Collectors.counting())); // Count occurrences
+
+        // Step 2: Find the meal with the maximum count using a comparator
+        mealCountMap.entrySet().stream()
+                .max(Map.Entry.comparingByValue()) // Find the entry with the highest count
+                .ifPresent(entry ->
+                        System.out.println("Najčešće jelo: " + entry.getKey() + " (Ponavljanja: " + entry.getValue() + ")")
+                );
+    }
+
+    /**
+     * Finds and displays all ingredients for every meal in order.
+     *
+     * @param orders Every order user ordered.
+     */
+    private static void displayIngredientsForMeals(Set<Order> orders) {
+        // Step 1: Extract all ingredients from all meals in all orders
+        Set<Ingredient> allIngredients = orders.stream()
+                .flatMap(order -> order.getMeals().stream()) // Flatten meals across all orders
+                .flatMap(meal -> meal.getIngredients().stream()) // Flatten ingredients across all meals
+                .collect(Collectors.toSet()); // Collect unique ingredients into a set
+
+        // Step 2: Display the ingredients
+        System.out.println("Svi sastojci unutar naruđbe su :");
+        allIngredients.forEach(ingredient -> System.out.println(ingredient.getName()));
+    }
+
+    /**
+     * Calculates and displays total price of all meals in the orders.
+     *
+     * @param orders All the orders user made.
+     */
+    private static void displayTotalOrderPrice(Set<Order> orders) {
+        // Step 1: Calculate the total price
+        BigDecimal totalPrice = orders.stream()
+                .flatMap(order -> order.getMeals().stream()) // Flatten all meals from all orders
+                .map(Meal::getPrice) // Extract the price of each meal
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum up all prices, starting from BigDecimal.ZERO
+
+        // Step 2: Display the total price
+        System.out.println("Ukupna cijena naruđbe je : " + totalPrice);
+    }
+
+
+    /**
+     * Finds and displays every address and restaurant that is on that address.
+     *
+     * @param restaurants Every restaurant in the organisation.
+     */
+    private static void displayRestaurantsAtAddress(Set<Restaurant> restaurants) {
+        // Step 1: Extract all unique cities
+        Set<String> allCities = restaurants.stream()
+                .map(restaurant -> restaurant.getAddress().getCity()) // Extract the city from the address
+                .collect(Collectors.toSet());
+
+        // Step 2: Group restaurants by city
+        Map<String, List<Restaurant>> restaurantsByCity = restaurants.stream()
+                .collect(Collectors.groupingBy(restaurant -> restaurant.getAddress().getCity()));
+
+        // Step 3: Iterate through cities and display restaurants
+        allCities.forEach(city -> {
+            System.out.println("Grad: " + city);
+            List<Restaurant> restaurantsInCity = restaurantsByCity.getOrDefault(city, List.of());
+            restaurantsInCity.forEach(restaurant -> System.out.println(" - " + restaurant.getName()));
+        });
     }
 }

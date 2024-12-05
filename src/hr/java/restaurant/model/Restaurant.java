@@ -77,6 +77,10 @@ public class Restaurant extends Entity {
         this.deliverers = deliverers;
     }
 
+    public Integer getEmployeeCount() {
+        return chefs.size() + waiters.size() + deliverers.size();
+    }
+
     @Override
     public String toString() {
         return name;
