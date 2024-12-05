@@ -107,7 +107,7 @@ public class Main {
         findMostCommonMeal(restaurants);
         displayIngredientsForMeals(orders);
         displayTotalOrderPrice(orders);
-        displayRestaurantsAtAddress();
+        displayRestaurantsAtAddress(restaurants);
     }
 
     /**
