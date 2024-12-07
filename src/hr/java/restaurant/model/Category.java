@@ -1,9 +1,11 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+
 /**
  * Represents category which will be available in the restaurant.
  */
-public class Category extends Entity {
+public class Category extends Entity implements Serializable {
     private String name;
     private String description;
 

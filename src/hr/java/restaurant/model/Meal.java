@@ -1,18 +1,20 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Represents a meal which will be available in the restaurant.
  */
-public class Meal extends Entity {
+public class Meal extends Entity implements Serializable {
     private String name;
     private Category category;
-    private Set<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
     private BigDecimal price;
 
-    public Meal(Long id, String name, Category category, Set<Ingredient> ingredients, BigDecimal price) {
+    public Meal(Long id, String name, Category category, List<Ingredient> ingredients, BigDecimal price) {
         super(id);
         this.name = name;
         this.category = category;
@@ -36,11 +38,11 @@ public class Meal extends Entity {
         this.category = category;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

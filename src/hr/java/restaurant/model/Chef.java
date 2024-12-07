@@ -1,9 +1,11 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+
 /**
  * Represents data about chef which will work in restaurant.
  */
-public class Chef extends Person {
+public class Chef extends Person implements Serializable {
     private Contract contract;
     private Bonus bonus;
 

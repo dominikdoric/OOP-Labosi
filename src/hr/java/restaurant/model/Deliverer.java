@@ -1,9 +1,11 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+
 /**
  * Represents data about deliverer which will work in the restaurant.
  */
-public class Deliverer extends Person {
+public class Deliverer extends Person implements Serializable {
     private Contract contract;
     private Bonus bonus;
 

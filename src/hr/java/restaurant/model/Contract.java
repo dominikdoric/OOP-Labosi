@@ -2,13 +2,14 @@ package hr.java.restaurant.model;
 
 import hr.java.restaurant.enumeration.ContractType;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
  * Represents data about contract for each employee.
  */
-public class Contract {
+public class Contract implements Serializable {
     private Integer id;
     private BigDecimal salary;
     private LocalDate startDate;

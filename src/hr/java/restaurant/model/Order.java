@@ -1,18 +1,24 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Represents order which will be ordered from a customer.
  */
-public class Order extends Entity {
+public class Order extends Entity implements Serializable {
     private Restaurant restaurant;
-    private Set<Meal> meals;
+    private List<Meal> meals;
     private Deliverer deliverer;
     private LocalDateTime deliveryDateAndTime;
 
-    public Order(Long id, Restaurant restaurant, Set<Meal> meals, Deliverer deliverer, LocalDateTime deliveryDateAndTime) {
+    public Order(Long id,
+                 Restaurant restaurant,
+                 List<Meal> meals,
+                 Deliverer deliverer,
+                 LocalDateTime deliveryDateAndTime) {
         super(id);
         this.restaurant = restaurant;
         this.meals = meals;
@@ -28,11 +34,11 @@ public class Order extends Entity {
         this.restaurant = restaurant;
     }
 
-    public Set<Meal> getMeals() {
+    public List<Meal> getMeals() {
         return meals;
     }
 
-    public void setMeals(Set<Meal> meals) {
+    public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
 

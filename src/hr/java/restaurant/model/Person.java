@@ -1,10 +1,12 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+
 /**
  * Represents base class for all classes that stores data about employees.
  * It handles their first name and last name.
  */
-abstract public class Person {
+abstract public class Person implements Serializable {
     Integer id;
     String firstName;
     String lastName;

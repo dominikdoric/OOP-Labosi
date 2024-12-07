@@ -1,9 +1,11 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
+
 /**
  * Represents address of a specific restaurant.
  */
-public class Address {
+public class Address implements Serializable {
     private Integer id;
     private String street;
     private String houseNumber;

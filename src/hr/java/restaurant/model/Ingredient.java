@@ -1,11 +1,12 @@
 package hr.java.restaurant.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Represents ingredient which will be available in the restaurant.
  */
-public class Ingredient extends Entity {
+public class Ingredient extends Entity implements Serializable {
     private String name;
     private Category category;
     private BigDecimal kcal;

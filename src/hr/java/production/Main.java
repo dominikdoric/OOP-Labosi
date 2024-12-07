@@ -8,13 +8,15 @@ import hr.java.restaurant.model.*;
 import hr.java.restaurant.sort.EmployeesByContractLenghtSorter;
 import hr.java.restaurant.sort.EmployeesBySalarySorter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.*;
@@ -38,6 +40,27 @@ public class Main {
      * This function is first called when we start application.
      */
     public static void main(String[] args) {
+        List<Address> addresses = getAddressesFromFile();
+        List<Bonus> bonuses = getBonusesFromFile();
+        List<Category> categories = getCategoriesFromFile();
+        List<Contract> contracts = getContractsFromFile();
+        List<Chef> chefs = getChefsFromFile(contracts, bonuses);
+        List<Waiter> waiters = getWaitersFromFile(contracts, bonuses);
+        List<Deliverer> deliverers = getDeliverersFromFile(contracts, bonuses);
+        List<Ingredient> ingredients = getIngredientsFromFile(categories);
+        List<Meal> meals = getMealsFromFile(categories, ingredients);
+        List<Restaurant> restaurants = getRestaurantsFromFile(addresses, meals, chefs, waiters, deliverers);
+        List<Order> orders = getOrdersFromFile(restaurants, meals, deliverers);
+
+        for (Order order : orders) {
+            System.out.println("Id --> " + order.getId());
+            System.out.println("Restaurant --> " + order.getRestaurant().getName());
+            System.out.println("Meal --> " + order.getMeals().getFirst().getName());
+            System.out.println("Deliverer --> " + order.getDeliverer().getFirstName());
+            System.out.println("Delivery date and time --> " + order.getDeliveryDateAndTime());
+        }
+
+        /*
         Scanner scanner = new Scanner(System.in);
         Set<Category> categories = new HashSet<>(NUMBER_OF_CATEGORIES);
         Set<Ingredient> ingredients = new HashSet<>(NUMBER_OF_INGREDIENTS);
@@ -108,6 +131,7 @@ public class Main {
         displayIngredientsForMeals(orders);
         displayTotalOrderPrice(orders);
         displayRestaurantsAtAddress(restaurants);
+         */
     }
 
     /**
@@ -272,7 +296,7 @@ public class Main {
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
-            Set<Ingredient> chosenIngredients = new HashSet<>(ingredientsNumber);
+            List<Ingredient> chosenIngredients = new ArrayList<>(ingredientsNumber);
             for (int k = 0; k < ingredientsNumber; k++) {
                 System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
                 scanner.nextLine();
@@ -323,7 +347,7 @@ public class Main {
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
 
-            Set<Ingredient> chosenIngredients = new HashSet<>(ingredientsNumber);
+            List<Ingredient> chosenIngredients = new ArrayList<>(ingredientsNumber);
             for (int k = 0; k < ingredientsNumber; k++) {
                 System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
                 scanner.nextLine();
@@ -379,7 +403,7 @@ public class Main {
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
-            Set<Ingredient> chosenIngredients = new HashSet<>(ingredientsNumber);
+            List<Ingredient> chosenIngredients = new ArrayList<>(ingredientsNumber);
             for (int k = 0; k < ingredientsNumber; k++) {
                 System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
                 scanner.nextLine();
@@ -436,7 +460,7 @@ public class Main {
             }
             System.out.println("Koliko sastojaka želite unijeti: ");
             int ingredientsNumber = scanner.nextInt();
-            Set<Ingredient> chosenIngredients = new HashSet<>(ingredientsNumber);
+            List<Ingredient> chosenIngredients = new ArrayList<>(ingredientsNumber);
             for (int k = 0; k < ingredientsNumber; k++) {
                 System.out.println("Molimo unesite ime " + (i + 1) + " sastojka: ");
                 scanner.nextLine();
@@ -723,7 +747,7 @@ public class Main {
 
             String mealName = scanner.nextLine();
             Meal choosenMeal = findMealByName(meals, mealName);
-            Set<Meal> chosenMeals = new HashSet<>(1);
+            List<Meal> chosenMeals = new ArrayList<>(1);
             chosenMeals.add(choosenMeal);
 
             System.out.println("Molimo Vas unesite koji kuhar će raditi u Vašem " + (i + 1) + ". restoranu");
@@ -736,7 +760,7 @@ public class Main {
 
             String chefName = scanner.nextLine();
             Chef chosenChef = findChefByName(chefs, chefName);
-            Set<Chef> chosenChefs = new HashSet<>(1);
+            List<Chef> chosenChefs = new ArrayList<>(1);
             chosenChefs.add(chosenChef);
 
             System.out.println("Molimo Vas unesite koji konobar će raditi u Vašem " + (i + 1) + ". restoranu");
@@ -749,7 +773,7 @@ public class Main {
 
             String waiterName = scanner.nextLine();
             Waiter chosenWaiter = findWaiterByName(waiters, waiterName);
-            Set<Waiter> chosenWaiters = new HashSet<>(1);
+            List<Waiter> chosenWaiters = new ArrayList<>(1);
             chosenWaiters.add(chosenWaiter);
 
             System.out.println("Molimo Vas unesite koji dostavljač će raditi u Vašem " + (i + 1) + ". restoranu");
@@ -761,7 +785,7 @@ public class Main {
 
             String delivererName = scanner.nextLine();
             Deliverer chosenDeliverer = findDelivererByName(deliverers, delivererName);
-            Set<Deliverer> chosenDeliverers = new HashSet<>(1);
+            List<Deliverer> chosenDeliverers = new ArrayList<>(1);
             chosenDeliverers.add(chosenDeliverer);
 
             restaurants.add(new Restaurant(
@@ -810,7 +834,7 @@ public class Main {
             }
             String mealName = scanner.nextLine();
             Meal chosenMeal = findMealByName(meals, mealName);
-            Set<Meal> chosenMeals = new HashSet<>(1);
+            List<Meal> chosenMeals = new ArrayList<>(1);
             chosenMeals.add(chosenMeal);
 
             System.out.println("Koji dostavljač želite da Vam dostavi hranu?");
@@ -1468,5 +1492,348 @@ public class Main {
             List<Restaurant> restaurantsInCity = restaurantsByCity.getOrDefault(city, List.of());
             restaurantsInCity.forEach(restaurant -> System.out.println(" - " + restaurant.getName()));
         });
+    }
+
+    private static List<Address> getAddressesFromFile() {
+        List<Address> addresses = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/addresses.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                String street = reader.readLine().trim();
+                String houseNumber = reader.readLine().trim();
+                String city = reader.readLine().trim();
+                String postalCode = reader.readLine().trim();
+
+                Address address = new Address(id, street, houseNumber, city, postalCode);
+                addresses.add(address);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return addresses;
+    }
+
+    private static List<Bonus> getBonusesFromFile() {
+        List<Bonus> bonuses = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/bonuses.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                Integer bonusValue = Integer.parseInt(reader.readLine().trim());
+
+                Bonus bonus = new Bonus(id, bonusValue);
+                bonuses.add(bonus);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return bonuses;
+    }
+
+    private static List<Category> getCategoriesFromFile() {
+        List<Category> categories = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/categories.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Long id = Long.parseLong(line.trim());
+                String name = reader.readLine().trim();
+                String description = reader.readLine().trim();
+
+                Category category = new Category(id, name, description);
+                categories.add(category);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return categories;
+    }
+
+    private static List<Contract> getContractsFromFile() {
+        List<Contract> contracts = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/contracts.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                BigDecimal salary = new BigDecimal(reader.readLine().trim());
+                LocalDate startDate = LocalDate.parse(reader.readLine().trim());
+                LocalDate endDate = LocalDate.parse(reader.readLine().trim());
+                ContractType contractType = ContractType.valueOf(reader.readLine().trim());
+
+                Contract contract = new Contract(id, salary, startDate, endDate, contractType);
+                contracts.add(contract);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return contracts;
+    }
+
+    private static List<Chef> getChefsFromFile(List<Contract> contracts, List<Bonus> bonuses) {
+        List<Chef> chefs = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/chefs.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                String firstName = reader.readLine().trim();
+                String lastName = reader.readLine().trim();
+                Integer contractId = Integer.parseInt(reader.readLine().trim());
+                Contract contract = contracts.stream()
+                        .filter(contract1 -> contract1.getId().equals(contractId))
+                        .findFirst()
+                        .orElse(null);
+                Integer bonusId = Integer.parseInt(reader.readLine().trim());
+                Bonus bonus = bonuses.stream()
+                        .filter(bonus1 -> bonus1.id().equals(bonusId))
+                        .findFirst()
+                        .orElse(null);
+
+                Chef chef = new Chef(id, firstName, lastName, contract, bonus);
+                chefs.add(chef);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return chefs;
+    }
+
+    private static List<Waiter> getWaitersFromFile(List<Contract> contracts, List<Bonus> bonuses) {
+        List<Waiter> waiters = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/waiters.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                String firstName = reader.readLine().trim();
+                String lastName = reader.readLine().trim();
+                Integer contractId = Integer.parseInt(reader.readLine().trim());
+                Contract contract = contracts.stream()
+                        .filter(contract1 -> contract1.getId().equals(contractId))
+                        .findFirst()
+                        .orElse(null);
+                Integer bonusId = Integer.parseInt(reader.readLine().trim());
+                Bonus bonus = bonuses.stream()
+                        .filter(bonus1 -> bonus1.id().equals(bonusId))
+                        .findFirst()
+                        .orElse(null);
+
+                Waiter waiter = new Waiter(id, firstName, lastName, contract, bonus);
+                waiters.add(waiter);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return waiters;
+    }
+
+    private static List<Deliverer> getDeliverersFromFile(List<Contract> contracts, List<Bonus> bonuses) {
+        List<Deliverer> deliverers = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/deliverers.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Integer id = Integer.parseInt(line.trim());
+                String firstName = reader.readLine().trim();
+                String lastName = reader.readLine().trim();
+                Integer contractId = Integer.parseInt(reader.readLine().trim());
+                Contract contract = contracts.stream()
+                        .filter(contract1 -> contract1.getId().equals(contractId))
+                        .findFirst()
+                        .orElse(null);
+                Integer bonusId = Integer.parseInt(reader.readLine().trim());
+                Bonus bonus = bonuses.stream()
+                        .filter(bonus1 -> bonus1.id().equals(bonusId))
+                        .findFirst()
+                        .orElse(null);
+
+                Deliverer deliverer = new Deliverer(id, firstName, lastName, contract, bonus);
+                deliverers.add(deliverer);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return deliverers;
+    }
+
+    private static List<Ingredient> getIngredientsFromFile(List<Category> categories) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/ingredients.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Long id = Long.parseLong(line.trim());
+                String name = reader.readLine().trim();
+                Long categoryId = Long.parseLong(reader.readLine().trim());
+                Category category = categories.stream()
+                        .filter(category1 -> category1.getId().equals(categoryId))
+                        .findFirst()
+                        .orElse(null);
+                BigDecimal kcal = new BigDecimal(reader.readLine().trim());
+                String preparationMethod = reader.readLine().trim();
+
+                Ingredient ingredient = new Ingredient(id, name, category, kcal, preparationMethod);
+                ingredients.add(ingredient);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return ingredients;
+    }
+
+    private static List<Meal> getMealsFromFile(List<Category> categories, List<Ingredient> ingredients) {
+        List<Meal> meals = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/meals.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Long id = Long.parseLong(line.trim());
+                String name = reader.readLine().trim();
+                Long categoryId = Long.parseLong(reader.readLine().trim());
+                Category category = categories.stream()
+                        .filter(category1 -> category1.getId().equals(categoryId))
+                        .findFirst()
+                        .orElse(null);
+                String ingredientsIds = reader.readLine().trim();
+                String[] ingredientIdStrings = ingredientsIds.split(",");
+                List<Ingredient> mealIngredients = Arrays.stream(ingredientIdStrings)
+                        .map(Long::parseLong)
+                        .map(ingredientId -> ingredients.stream()
+                                .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                BigDecimal price = new BigDecimal(reader.readLine().trim());
+
+                Meal meal = new Meal(id, name, category, mealIngredients, price);
+                meals.add(meal);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return meals;
+    }
+
+    private static List<Restaurant> getRestaurantsFromFile(List<Address> addresses,
+                                                           List<Meal> meals,
+                                                           List<Chef> chefs,
+                                                           List<Waiter> waiters,
+                                                           List<Deliverer> deliverers) {
+        List<Restaurant> restaurants = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/restaurants.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Long id = Long.parseLong(line.trim());
+                String name = reader.readLine().trim();
+                Integer addressId = Integer.parseInt(reader.readLine().trim());
+                Address address = addresses.stream()
+                        .filter(address1 -> address1.getId().equals(addressId))
+                        .findFirst()
+                        .orElse(null);
+                String[] mealsStringIds = reader.readLine().trim().split(",");
+                String[] chefsStringIds = reader.readLine().trim().split(",");
+                String[] waitersStringIds = reader.readLine().trim().split(",");
+                String[] deliverersStringIds = reader.readLine().trim().split(",");
+
+                List<Meal> mealsList = Arrays.stream(mealsStringIds)
+                        .map(Long::parseLong)
+                        .map(mealId -> meals.stream()
+                                .filter(meal -> meal.getId().equals(mealId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                List<Chef> chefsList = Arrays.stream(chefsStringIds)
+                        .map(Integer::parseInt)
+                        .map(chefId -> chefs.stream()
+                                .filter(chef -> chef.getId().equals(chefId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                List<Waiter> waitersList = Arrays.stream(waitersStringIds)
+                        .map(Integer::parseInt)
+                        .map(waiterId -> waiters.stream()
+                                .filter(waiter -> waiter.getId().equals(waiterId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                List<Deliverer> deliverersList = Arrays.stream(deliverersStringIds)
+                        .map(Integer::parseInt)
+                        .map(delivererId -> deliverers.stream()
+                                .filter(deliverer -> deliverer.getId().equals(delivererId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                Restaurant restaurant = new Restaurant(id,
+                        name,
+                        address,
+                        mealsList,
+                        chefsList,
+                        waitersList,
+                        deliverersList);
+                restaurants.add(restaurant);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return restaurants;
+    }
+
+    private static List<Order> getOrdersFromFile(List<Restaurant> restaurants,
+                                                 List<Meal> meals,
+                                                 List<Deliverer> deliverers) {
+        List<Order> orders = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("dat/orders.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Long id = Long.parseLong(line.trim());
+                Long restaurantId = Long.parseLong(reader.readLine().trim());
+                Restaurant restaurant = restaurants.stream()
+                        .filter(restaurant1 -> restaurant1.getId().equals(restaurantId))
+                        .findFirst()
+                        .orElse(null);
+
+                String[] mealStringIds = reader.readLine().trim().split(",");
+                List<Meal> orderMeals = Arrays.stream(mealStringIds)
+                        .map(Long::parseLong)
+                        .map(mealId -> meals.stream()
+                                .filter(meal -> meal.getId().equals(mealId))
+                                .findFirst()
+                                .orElse(null))
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                Integer delivererId = Integer.parseInt(reader.readLine().trim());
+                Deliverer deliverer = deliverers.stream()
+                        .filter(deliverer1 -> deliverer1.getId().equals(delivererId))
+                        .findFirst()
+                        .orElse(null);
+
+                String dateLine = reader.readLine().trim();
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                LocalDateTime deliveryDateAndTime = LocalDateTime.parse(dateLine, dateTimeFormatter);
+
+                Order order = new Order(id, restaurant, orderMeals, deliverer, deliveryDateAndTime);
+                orders.add(order);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return orders;
     }
 }
